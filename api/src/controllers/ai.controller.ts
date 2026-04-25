@@ -36,7 +36,7 @@ export const getInsights = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getInsightById = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const insight = await prisma.aiInsight.findFirst({
     where: { id, userId: req.userId as string },
   });
