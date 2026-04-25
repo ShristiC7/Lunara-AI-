@@ -1,0 +1,91 @@
+import { prisma } from '../lib/prisma';
+import { AppError } from '../utils/errors';
+
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+
+export class AiService {
+  static async getCyclePrediction(userId: string) {
+    const cycles = await prisma.cycle.findMany({
+      where: { userId },
+      orderBy: { startDate: 'asc' },
+    });
+
+    if (cycles.length === 0) {
+      // Return a basic default if no data, or handle in FastAPI
+    }
+
+    try {
+      const response = await fetch(`${AI_SERVICE_URL}/predict/cycle`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, cycles }),
+      });
+
+      if (!response.ok) {
+        throw new AppError('AI Service unavailable', 503, 'SERVICE_UNAVAILABLE');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new AppError('Failed to connect to AI service', 503, 'SERVICE_UNAVAILABLE');
+    }
+  }
+
+  static async triggerSymptomAnalysis(userId: string) {
+    // Check rate limit (10 per day)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const checkCount = await prisma.aiInsight.count({
+      where: {
+        userId,
+        generatedAt: { gte: today },
+      },
+    });
+
+    if (checkCount >= 10) {
+      throw new AppError('Daily AI insight limit reached (10/day)', 429, 'RATE_LIMIT_EXCEEDED');
+    }
+
+    const symptoms = await prisma.symptom.findMany({
+      where: { userId },
+      orderBy: { date: 'asc' },
+      take: 30, // Last 30 entries for context
+    });
+
+    if (symptoms.length === 0) {
+      throw new AppError('No symptoms logged yet to analyze', 400, 'BAD_REQUEST');
+    }
+
+    try {
+      const response = await fetch(`${AI_SERVICE_URL}/analyze/symptoms`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, symptoms }),
+      });
+
+      if (!response.ok) {
+        throw new AppError('AI Service analysis failed', 503, 'SERVICE_UNAVAILABLE');
+      }
+
+      const analysis = await response.json();
+
+      // Store the insight
+      const savedInsight = await prisma.aiInsight.create({
+        data: {
+          userId,
+          insightType: 'SYMPTOM_ANALYSIS',
+          content: analysis as any,
+          status: 'completed',
+        },
+      });
+
+      return savedInsight;
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new AppError('Failed to generate AI insight', 503, 'SERVICE_UNAVAILABLE');
+    }
+  }
+}
