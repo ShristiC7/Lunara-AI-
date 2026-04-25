@@ -4,13 +4,13 @@ import { asyncHandler } from '../utils/errors';
 
 export const createCycle = asyncHandler(async (req: Request, res: Response) => {
   const { startDate, endDate } = req.body;
-  const cycle = await CycleService.createCycle(req.userId, startDate, endDate);
+  const cycle = await CycleService.createCycle(req.userId as string, startDate, endDate);
   res.status(201).json({ success: true, data: cycle });
 });
 
 export const updateCycle = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const cycle = await CycleService.updateCycle(id, req.userId, req.body);
+  const cycle = await CycleService.updateCycle(id, req.userId as string, req.body);
   res.status(200).json({ success: true, data: cycle });
 });
 
