@@ -1,4 +1,4 @@
-import { AppError, asyncHandler } from '../../utils/errors';
+import { AppError, asyncHandler } from '../utils/errors';
 import { Request, Response, NextFunction } from 'express';
 
 describe('AppError', () => {
