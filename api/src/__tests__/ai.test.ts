@@ -9,6 +9,9 @@ describe('AI Integration Endpoints', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (prisma.user.findUnique as jest.Mock).mockResolvedValue({ id: 'user-123' });
+    (prisma.cycle.findMany as jest.Mock).mockResolvedValue([]);
+    (prisma.aiInsight.count as jest.Mock).mockResolvedValue(0);
+    (prisma.symptom.findMany as jest.Mock).mockResolvedValue([]);
   });
 
   describe('GET /api/cycles/prediction', () => {
