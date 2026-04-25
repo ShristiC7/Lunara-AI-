@@ -14,6 +14,7 @@ import cycleRouter from './routes/cycle.routes';
 import symptomRouter from './routes/symptom.routes';
 import aiRouter from './routes/ai.routes';
 import jobRouter from './routes/job.routes';
+import reportRouter from './routes/report.routes';
 
 const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -57,6 +58,7 @@ export function createApp(): Application {
   app.use('/api/symptoms', symptomRouter);
   app.use('/api/insights', aiRouter);
   app.use('/api/jobs', jobRouter);
+  app.use('/api/reports', reportRouter);
 
   app.use(notFoundHandler);
   app.use(globalErrorHandler);

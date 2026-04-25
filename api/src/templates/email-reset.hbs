@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: sans-serif; color: #444; }
+        .container { padding: 20px; border: 1px solid #eee; border-radius: 5px; }
+        .header { color: #6c5ce7; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        .button { background: #6c5ce7; color: #ffffff !important; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Lunara AI</div>
+        <p>Hello,</p>
+        <p>You requested a password reset. Please click the button below to set a new password. This link will expire in 1 hour.</p>
+        <p>
+            <a href="{{resetUrl}}" class="button">Reset Password</a>
+        </p>
+        <p>If you didn't request this, you can safely ignore this email.</p>
+        <br>
+        <p>Best regards,<br>The Lunara AI Team</p>
+    </div>
+</body>
+</html>

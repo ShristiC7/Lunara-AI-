@@ -3,8 +3,10 @@ import { prisma } from './lib/prisma';
 import { logger } from './utils/logger';
 import { startAiWorker } from './workers/ai.worker';
 import { startReportWorker } from './workers/report.worker';
+import { startEmailWorker } from './workers/email.worker';
 import { aiQueue } from './queues/ai.queue';
 import { reportQueue } from './queues/report.queue';
+import { emailQueue } from './queues/email.queue';
 
 const PORT = parseInt(process.env.PORT ?? '4000', 10);
 
@@ -19,6 +21,7 @@ const server = app.listen(PORT, () => {
   if (process.env.NODE_ENV !== 'test') {
     startAiWorker();
     startReportWorker();
+    startEmailWorker();
     logger.info('Background workers initialized');
   }
 });
@@ -30,6 +33,7 @@ const gracefulShutdown = (signal: string) => async () => {
     try {
       await aiQueue.close();
       await reportQueue.close();
+      await emailQueue.close();
       await prisma.$disconnect();
       logger.info('Database and Queue connections closed. Graceful shutdown complete.');
       process.exit(0);
