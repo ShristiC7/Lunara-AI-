@@ -33,5 +33,9 @@ export const prisma = {
     create: jest.fn(),
     count: jest.fn(),
   },
+  auditLog: {
+    create: jest.fn(),
+    findMany: jest.fn(),
+  },
   $disconnect: jest.fn(),
 } as any;

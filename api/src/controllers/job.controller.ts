@@ -5,7 +5,7 @@ import { asyncHandler } from '../utils/errors';
 import { AppError } from '../utils/errors';
 
 export const getJobStatus = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
 
   // Try to find job in AI queue first
   let job = await aiQueue.getJob(id);

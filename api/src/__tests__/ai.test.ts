@@ -1,6 +1,13 @@
 import { testApp, request } from './helpers/app.helpers';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma';
+import { aiQueue } from '../queues/ai.queue';
+
+jest.mock('../queues/ai.queue', () => ({
+  aiQueue: {
+    add: jest.fn(),
+  },
+}));
 
 describe('AI Integration Endpoints', () => {
   const secret = process.env.JWT_SECRET || 'dev-super-secret-jwt-key-change-in-production-must-be-64-chars-long';
@@ -33,7 +40,7 @@ describe('AI Integration Endpoints', () => {
 
   describe('POST /api/insights/trigger', () => {
     it('returns 400 if no symptoms logged', async () => {
-      (prisma.symptom.findMany as jest.Mock).mockResolvedValue([]);
+      (prisma.symptom.count as jest.Mock).mockResolvedValue(0);
 
       const res = await request(testApp)
         .post('/api/insights/trigger')
@@ -52,6 +59,18 @@ describe('AI Integration Endpoints', () => {
       
       expect(res.status).toBe(429);
       expect(res.body.error.message).toContain('limit reached');
+    });
+
+    it('successfully queues an analysis job', async () => {
+      (prisma.symptom.count as jest.Mock).mockResolvedValue(5);
+      (aiQueue.add as jest.Mock).mockResolvedValue({ id: 'job-123' });
+
+      const res = await request(testApp)
+        .post('/api/insights/trigger')
+        .set('Authorization', `Bearer ${token}`);
+      
+      expect(res.status).toBe(202);
+      expect(res.body.data.jobId).toBe('job-123');
     });
   });
 });
