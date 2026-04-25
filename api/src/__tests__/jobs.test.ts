@@ -2,6 +2,7 @@ import { testApp, request } from './helpers/app.helpers';
 import jwt from 'jsonwebtoken';
 import { aiQueue } from '../queues/ai.queue';
 import { reportQueue } from '../queues/report.queue';
+import { prisma } from '../lib/prisma';
 
 jest.mock('../queues/ai.queue', () => ({
   aiQueue: {
@@ -18,6 +19,11 @@ jest.mock('../queues/report.queue', () => ({
 describe('Job Status Endpoints', () => {
   const secret = process.env.JWT_SECRET || 'dev-super-secret-jwt-key-change-in-production-must-be-64-chars-long';
   const token = jwt.sign({ userId: 'user-123' }, secret, { expiresIn: '15m' });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (prisma.user.findUnique as jest.Mock).mockResolvedValue({ id: 'user-123' });
+  });
 
   it('returns job status from AI queue', async () => {
     (aiQueue.getJob as jest.Mock).mockResolvedValue({
