@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { AuthService } from '../services/auth.service';
 import { asyncHandler } from '../utils/errors';
+import { emailQueue } from '../queues/email.queue';
+import { prisma } from '../lib/prisma';
+import crypto from 'crypto';
 
 const setRefreshCookie = (res: Response, token: string) => {
   res.cookie('refreshToken', token, {
@@ -62,4 +65,39 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
   
   res.clearCookie('refreshToken');
   res.status(200).json({ success: true, data: null });
+});
+
+export const forgotPassword = asyncHandler(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  if (user) {
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiry = new Date(Date.now() + 3600000); // 1 hour
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        resetToken: token,
+        resetTokenExpiry: expiry,
+      },
+    });
+
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
+
+    await emailQueue.add({
+      type: 'PASSWORD_RESET',
+      userId: user.id,
+      to: user.email,
+      subject: 'Reset your Lunara AI password',
+      templateName: 'email-reset',
+      context: { resetUrl },
+    });
+  }
+
+  // Always return success to prevent email enumeration
+  res.status(200).json({
+    success: true,
+    data: { message: 'If an account exists, a reset link has been sent.' }
+  });
 });
