@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as cycleController from '../controllers/cycle.controller';
 import * as symptomController from '../controllers/symptom.controller';
+import * as aiController from '../controllers/ai.controller';
 import { requireAuth } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import { createCycleSchema, updateCycleSchema } from '../schemas/cycle.schema';
@@ -21,6 +22,8 @@ router.post(
 );
 
 router.get('/stats', cycleController.getStats);
+
+router.get('/prediction', aiController.getPrediction);
 
 router.get('/', cycleController.getCycles);
 
