@@ -94,4 +94,68 @@ export class CycleService {
 
     await prisma.cycle.delete({ where: { id } });
   }
+
+  static async getStats(userId: string) {
+    const cycles = await prisma.cycle.findMany({
+      where: { userId, NOT: { endDate: null } },
+      orderBy: { startDate: 'desc' },
+      take: 6,
+      include: { symptoms: true },
+    });
+
+    if (cycles.length === 0) {
+      return {
+        averageCycleLength: 0,
+        averagePeriodLength: 0,
+        mostCommonSymptoms: [],
+        regularityScore: 100,
+      };
+    }
+
+    const validCycleLengths = cycles.map(c => c.cycleLength).filter((l): l is number => l !== null);
+    const averageCycleLength = validCycleLengths.length > 0 
+      ? Math.round(validCycleLengths.reduce((a, b) => a + b, 0) / validCycleLengths.length)
+      : 0;
+
+    const periodLengths = cycles.map(c => {
+      if (!c.endDate) return 0;
+      const diff = Math.abs(c.endDate.getTime() - c.startDate.getTime());
+      return Math.ceil(diff / (1000 * 60 * 60 * 24));
+    });
+    const averagePeriodLength = Math.round(periodLengths.reduce((a, b) => a + b, 0) / periodLengths.length);
+
+    // Most common symptoms
+    const symptomCounts: Record<string, number> = {};
+    const allSymptoms = cycles.flatMap(c => c.symptoms);
+    
+    // This is a simple counting of non-null symptom indicators
+    allSymptoms.forEach(s => {
+      if (s.flowIntensity && s.flowIntensity > 2) symptomCounts['Heavy Flow'] = (symptomCounts['Heavy Flow'] || 0) + 1;
+      if (s.painLevel && s.painLevel > 3) symptomCounts['High Pain'] = (symptomCounts['High Pain'] || 0) + 1;
+      if (s.mood && s.mood < 3) symptomCounts['Low Mood'] = (symptomCounts['Low Mood'] || 0) + 1;
+      if (s.energyLevel && s.energyLevel < 3) symptomCounts['Low Energy'] = (symptomCounts['Low Energy'] || 0) + 1;
+    });
+
+    const mostCommonSymptoms = Object.entries(symptomCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+      .map(([name]) => name);
+
+    // Regularity score (Standard Deviation)
+    let regularityScore = 100;
+    if (validCycleLengths.length > 1) {
+      const avg = averageCycleLength;
+      const squareDiffs = validCycleLengths.map(l => Math.pow(l - avg, 2));
+      const stdDev = Math.sqrt(squareDiffs.reduce((a, b) => a + b, 0) / squareDiffs.length);
+      // 0 stdDev = 100 score, each day of stdDev subtractions 5 points (arbitrary for v1)
+      regularityScore = Math.max(0, 100 - Math.round(stdDev * 5));
+    }
+
+    return {
+      averageCycleLength,
+      averagePeriodLength,
+      mostCommonSymptoms,
+      regularityScore,
+    };
+  }
 }
