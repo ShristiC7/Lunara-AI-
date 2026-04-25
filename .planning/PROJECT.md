@@ -22,8 +22,6 @@ An individual woman can log her cycle and symptoms and receive accurate AI-power
 
 ### Active
 
-- [ ] AI service predicts next period date and ovulation window from logged data
-- [ ] AI service analyzes symptoms and returns personalized health insights
 - [ ] System generates a downloadable PDF health report on demand
 - [ ] Reports are delivered via email using Nodemailer
 - [ ] Background jobs process AI inference and report generation asynchronously via Bull queues
@@ -88,4 +86,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-26 after Phase 2 completion*
+*Last updated: 2026-04-26 after Phase 3 completion*
