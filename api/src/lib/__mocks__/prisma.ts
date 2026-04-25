@@ -11,6 +11,11 @@ export const prisma = {
     delete: jest.fn(),
     update: jest.fn(),
   },
+  passwordResetToken: {
+    create: jest.fn(),
+    findUnique: jest.fn(),
+    update: jest.fn(),
+  },
   cycle: {
     findMany: jest.fn(),
     findFirst: jest.fn(),
