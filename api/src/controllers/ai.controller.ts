@@ -9,8 +9,8 @@ export const getPrediction = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const triggerAnalysis = asyncHandler(async (req: Request, res: Response) => {
-  const insight = await AiService.triggerSymptomAnalysis(req.userId as string);
-  res.status(201).json({ success: true, data: insight });
+  const result = await AiService.triggerSymptomAnalysis(req.userId as string);
+  res.status(202).json({ success: true, data: result });
 });
 
 export const getInsights = asyncHandler(async (req: Request, res: Response) => {
