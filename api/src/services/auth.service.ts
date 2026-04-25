@@ -98,8 +98,8 @@ export class AuthService {
   }
 
   private static async generateTokens(userId: string) {
-    const accessToken = jwt.sign({ userId }, this.getJwtSecret(), { expiresIn: process.env.JWT_EXPIRES_IN || '15m' });
-    const refreshToken = jwt.sign({ userId }, this.getRefreshSecret(), { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d' });
+    const accessToken = jwt.sign({ userId }, this.getJwtSecret(), { expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as any });
+    const refreshToken = jwt.sign({ userId }, this.getRefreshSecret(), { expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '30d') as any });
 
     const tokenHash = crypto.createHash('sha256').update(refreshToken).digest('hex');
     const expiresAt = new Date();
