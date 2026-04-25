@@ -12,10 +12,11 @@ An individual woman can log her cycle and symptoms and receive accurate AI-power
 
 ### Validated
 
+- [x] Background jobs process AI inference and report generation asynchronously via Bull queues (Phase 4)
 - [x] AI service predicts next period date and ovulation window from logged data (Phase 3)
 - [x] AI service analyzes symptoms and returns personalized health insights (Phase 3)
 - [x] User can log menstrual cycle dates and symptoms daily (Phase 2)
-- [x] All AI interactions are logged and auditable (Phase 1/2/3 coverage)
+- [x] All AI interactions are logged and auditable (Phase 1/2/3/4 coverage)
 - [x] User can register, log in, and manage a secure personal account with JWT auth (Phase 1)
 - [x] API is secured with rate limiting, helmet, CORS, and structured error handling (Phase 1)
 - [x] System health is observable via structured Winston logs (Phase 1)
@@ -24,7 +25,6 @@ An individual woman can log her cycle and symptoms and receive accurate AI-power
 
 - [ ] System generates a downloadable PDF health report on demand
 - [ ] Reports are delivered via email using Nodemailer
-- [ ] Background jobs process AI inference and report generation asynchronously via Bull queues
 
 ### Out of Scope
 
