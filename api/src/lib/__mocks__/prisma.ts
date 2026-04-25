@@ -2,6 +2,7 @@ export const prisma = {
   user: {
     findUnique: jest.fn(),
     create: jest.fn(),
+    update: jest.fn(),
   },
   refreshToken: {
     findFirst: jest.fn(),
@@ -32,6 +33,12 @@ export const prisma = {
     findFirst: jest.fn(),
     create: jest.fn(),
     count: jest.fn(),
+  },
+  report: {
+    findMany: jest.fn(),
+    findFirst: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
   },
   auditLog: {
     create: jest.fn(),
