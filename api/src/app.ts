@@ -3,10 +3,12 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { v4 as uuidv4 } from 'uuid';
+import cookieParser from 'cookie-parser';
 
 import { createRequestLogger } from './utils/logger';
 import { notFoundHandler, globalErrorHandler } from './utils/errors';
 import healthRouter from './routes/health.routes';
+import authRouter from './routes/auth.routes';
 
 const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -32,6 +34,7 @@ export function createApp(): Application {
   );
 
   app.use(express.json({ limit: '10kb' }));
+  app.use(cookieParser());
 
   app.use((req, _res, next) => {
     req.requestId = uuidv4();
@@ -43,6 +46,7 @@ export function createApp(): Application {
   app.use(createRequestLogger());
 
   app.use('/api/health', healthRouter);
+  app.use('/api/auth', authRouter);
 
   app.use(notFoundHandler);
   app.use(globalErrorHandler);
