@@ -1,0 +1,120 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String               @id @default(uuid())
+  email         String               @unique
+  passwordHash  String
+  displayName   String?
+  bio           String?              @db.VarChar(500)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  cycles        Cycle[]
+  symptoms      Symptom[]
+  insights      AiInsight[]
+  reports       Report[]
+  auditLogs     AuditLog[]
+  refreshTokens RefreshToken[]
+  resetTokens   PasswordResetToken[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Cycle {
+  id          String      @id @default(uuid())
+  userId      String
+  startDate   DateTime
+  endDate     DateTime?
+  cycleLength Int?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symptoms    Symptom[]
+  insights    AiInsight[]
+
+  @@index([userId, startDate])
+}
+
+model Symptom {
+  id            String   @id @default(uuid())
+  userId        String
+  cycleId       String?
+  date          DateTime
+  mood          Int?
+  energyLevel   Int?
+  flowIntensity Int?
+  painLevel     Int?
+  notes         String?  @db.VarChar(500)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cycle         Cycle?   @relation(fields: [cycleId], references: [id], onDelete: SetNull)
+
+  @@index([userId, date])
+}
+
+model AiInsight {
+  id          String   @id @default(uuid())
+  userId      String
+  cycleId     String?
+  insightType String
+  content     Json
+  status      String   @default("completed")
+  generatedAt DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cycle       Cycle?   @relation(fields: [cycleId], references: [id], onDelete: SetNull)
+
+  @@index([userId, generatedAt])
+}
+
+model Report {
+  id          String    @id @default(uuid())
+  userId      String
+  fileUrl     String
+  status      String    @default("completed")
+  generatedAt DateTime  @default(now())
+  emailedAt   DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, generatedAt])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  resource  String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+}
