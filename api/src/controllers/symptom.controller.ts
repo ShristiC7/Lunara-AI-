@@ -8,25 +8,25 @@ export const createSymptom = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const updateSymptom = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const symptom = await SymptomService.updateSymptom(id, req.userId as string, req.body);
   res.status(200).json({ success: true, data: symptom });
 });
 
 export const getSymptomsByCycle = asyncHandler(async (req: Request, res: Response) => {
-  const { cycleId } = req.params;
+  const cycleId = req.params.cycleId as string;
   const symptoms = await SymptomService.getSymptomsByCycle(cycleId, req.userId as string);
   res.status(200).json({ success: true, data: symptoms });
 });
 
 export const getSymptomById = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const symptom = await SymptomService.getSymptomById(id, req.userId as string);
   res.status(200).json({ success: true, data: symptom });
 });
 
 export const deleteSymptom = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   await SymptomService.deleteSymptom(id, req.userId as string);
   res.status(200).json({ success: true, data: null });
 });
