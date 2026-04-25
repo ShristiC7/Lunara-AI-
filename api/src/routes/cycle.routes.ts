@@ -20,6 +20,8 @@ router.post(
   cycleController.createCycle
 );
 
+router.get('/stats', cycleController.getStats);
+
 router.get('/', cycleController.getCycles);
 
 router.get('/:id', cycleController.getCycleById);
