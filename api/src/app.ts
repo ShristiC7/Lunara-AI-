@@ -10,6 +10,7 @@ import { notFoundHandler, globalErrorHandler } from './utils/errors';
 import healthRouter from './routes/health.routes';
 import authRouter from './routes/auth.routes';
 import userRouter from './routes/user.routes';
+import cycleRouter from './routes/cycle.routes';
 
 const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -49,6 +50,7 @@ export function createApp(): Application {
   app.use('/api/health', healthRouter);
   app.use('/api/auth', authRouter);
   app.use('/api/users', userRouter);
+  app.use('/api/cycles', cycleRouter);
 
   app.use(notFoundHandler);
   app.use(globalErrorHandler);
