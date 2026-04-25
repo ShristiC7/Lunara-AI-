@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as cycleController from '../controllers/cycle.controller';
+import * as symptomController from '../controllers/symptom.controller';
 import { requireAuth } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import { createCycleSchema, updateCycleSchema } from '../schemas/cycle.schema';
@@ -22,6 +23,8 @@ router.post(
 router.get('/', cycleController.getCycles);
 
 router.get('/:id', cycleController.getCycleById);
+
+router.get('/:cycleId/symptoms', symptomController.getSymptomsByCycle);
 
 router.patch(
   '/:id',
