@@ -50,7 +50,7 @@ Lunara AI is a high-performance women's health platform. The project has reached
 ## 🛠 Active Environment Notes
 - **OS**: Windows (Restricted Environment)
 - **Critical Configuration**: 
-  - `pydantic` pinned to `2.13.0` to resolve DLL load errors.
+  - `pydantic` pinned to `2.9.2` to resolve DLL load errors (blocked by Application Control).
   - `recharts` pinned to `2.12.7` for stable React 19 compatibility.
 - **Stack**: Node.js 20, Python 3.13 (FastAPI), PostgreSQL, Redis.
 - **Deployment Strategy**: Multi-container Docker deployment targeting Render/Railway.
