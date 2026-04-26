@@ -1,5 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
 from .schemas.cycle_schemas import CyclePredictionRequest, CyclePredictionResponse
 from .schemas.symptom_schemas import SymptomAnalysisRequest, SymptomAnalysisResponse
 from .services.cycle_predictor import CyclePredictor
