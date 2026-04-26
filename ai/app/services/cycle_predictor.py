@@ -89,11 +89,29 @@ class CyclePredictor:
         ovulation_start = ovulation_center - timedelta(days=2)
         ovulation_end = ovulation_center + timedelta(days=2)
 
+        # --- Phase & Cycle Day Calculation ---
+        now = datetime.now()
+        cycle_day = (now - last_start).days + 1
+        days_until = (predicted_date - now).days
+        
+        # Determine Phase based on standard ranges
+        if cycle_day <= 5:
+            phase = "MENSTRUAL"
+        elif cycle_day <= 11:
+            phase = "FOLLICULAR"
+        elif cycle_day <= 16:
+            phase = "OVULATORY"
+        else:
+            phase = "LUTEAL"
+
         return {
             "predictedDate": predicted_date,
             "ovulationStart": ovulation_start,
             "ovulationEnd": ovulation_end,
             "confidence": confidence,
+            "phase": phase,
+            "cycleDay": cycle_day,
+            "daysUntil": max(0, days_until),
             "predictedLength": predicted_length,
             "finalPredictedLength": final_predicted_length,
             "symptomAdjustment": min(4.0, symptom_adjustment)

@@ -18,6 +18,9 @@ class CyclePredictionResponse(BaseModel):
     ovulationStart: datetime
     ovulationEnd: datetime
     confidence: str = Field(..., pattern="^(LOW|MEDIUM|HIGH)$")
+    phase: str = Field(..., pattern="^(MENSTRUAL|FOLLICULAR|OVULATORY|LUTEAL)$")
+    cycleDay: int
+    daysUntil: int
     predictedLength: Optional[float] = None
     finalPredictedLength: Optional[float] = None
     symptomAdjustment: Optional[float] = None
