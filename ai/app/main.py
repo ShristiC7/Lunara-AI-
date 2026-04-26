@@ -29,7 +29,8 @@ app.add_middleware(
 async def health():
     return {"status": "ok", "version": "1.0.0"}
 
-@app.post("/predict/cycle", response_model=CyclePredictionResponse)
+from typing import Optional
+@app.post("/predict/cycle", response_model=Optional[CyclePredictionResponse])
 async def predict_cycle(request: CyclePredictionRequest):
     try:
         prediction = CyclePredictor.predict(request.cycles, request.symptoms)
