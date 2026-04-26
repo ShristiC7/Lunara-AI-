@@ -1,22 +1,33 @@
 # Roadmap: Lunara AI
 
-**Milestone:** v1.0 — Complete Backend + AI Service
-**Created:** 2026-04-25
-**Requirements covered:** 55 / 55 ✓
-**Phases:** 6
+**Milestone 1:** v1.0 — Complete Backend + AI Service
+**Status:** ✅ Complete (Verified 2026-04-26)
+
+**Milestone 2:** v1.1 — Frontend implementation (Calm Intelligence UI)
+**Status:** 🏗️ In Progress
+**Phases:** 4
 
 ---
 
 ## Phase Overview
 
-| # | Phase | Goal | Requirements | Plans | Status |
-|---|-------|------|--------------|-------|--------|
-| 1 | Foundation: Auth + DB + API Core | Secure user accounts, full DB schema, API skeleton | AUTH-01–07, PROF-01–03, INFR-01–04, SECU-01–06 | 4 | ⬜ Pending |
-| 2 | Cycle & Symptom Data Layer | Users can log and retrieve all health tracking data | CYCL-01–05, SYMP-01–05 | 3 | ⬜ Pending |
-| 3 | AI Service: Prediction + Insights | Cycle prediction (ML) + GPT-4o symptom analysis | PRED-01–05, INSG-01–08 | 4 | ⬜ Pending |
-| 4 | Background Jobs + Queue Infrastructure | All async processing via Bull; workers handling AI + report jobs | JOBS-01–05 | 3 | ⬜ Pending |
-| 5 | PDF Reports + Email Delivery | Automated PDF generation, S3 storage, email dispatch | RPRT-01–07, MAIL-01–04 | 4 | ⬜ Pending |
-| 6 | Hardening, Testing + Integration | 80% test coverage, security audit, end-to-end verification | All | 3 | ⬜ Pending |
+### Milestone 1: Backend (Complete)
+| # | Phase | Goal | Requirements | Status |
+|---|-------|------|--------------|--------|
+| 1 | Foundation | Secure accounts, DB schema, API skeleton | AUTH, PROF, INFR, SECU | ✅ Done |
+| 2 | Data Layer | Cycle & Symptom logging | CYCL, SYMP | ✅ Done |
+| 3 | AI Service | Prediction + GPT-4o Insights | PRED, INSG | ✅ Done |
+| 4 | Jobs/Queues | Async processing via Bull | JOBS | ✅ Done |
+| 5 | Reports | PDF + Email delivery | RPRT, MAIL | ✅ Done |
+| 6 | Hardening | 80% test coverage + audit | All v1 | ✅ Done |
+
+### Milestone 2: Frontend (Active)
+| # | Phase | Goal | Requirements | Status |
+|---|-------|------|--------------|--------|
+| 7 | Frontend Foundation | Vite + React setup, Design System, Auth Interceptors | UI-BASE | 🏗️ Active |
+| 8 | Core Experience | Dashboard, Cycle Ring, Quick Logger | UI-CORE | ⬜ Pending |
+| 9 | Health Insights | Insights view, Analytics, PDF Download | UI-DATA | ⬜ Pending |
+| 10 | Polishing + PWA | Smooth transitions, Responsive audit, PWA manifest | UI-POLISH | ⬜ Pending |
 
 ---
 
@@ -390,3 +401,60 @@
 ---
 *Roadmap created: 2026-04-25*
 *Last updated: 2026-04-25 after initial creation*
+
+---
+
+## Phase 7: Frontend Foundation
+
+**Goal:** Initialize the Vite + React application in the \web/\ directory. Configure Tailwind CSS with the "Calm Intelligence" design system tokens. Implement the API service layer with Axios interceptors for JWT refresh rotation. Set up basic routing and the auth context/zustand store.
+
+**UI hint**: yes
+
+**Requirements:**
+- UI-BASE-01: Vite + React (TS) scaffold in \web/\
+- UI-BASE-02: Tailwind CSS config with Lavender/Soft Pink/Peach palette
+- UI-BASE-03: Typography setup (Outfit + Inter)
+- UI-BASE-04: Axios interceptors for 401/refresh handling
+- UI-BASE-05: Zustand store for Auth and User profile
+- UI-BASE-06: Basic layout (Navigation + Main container)
+
+**Depends on:** Milestone 1 (Backend API)
+
+**Plans:**
+
+### Plan 7.1 � Vite Scaffold + Design System
+- Run \
+pm create vite@latest web -- --template react-ts\
+- Install dependencies: \	ailwindcss\, \postcss\, \utoprefixer\, \lucide-react\, \ramer-motion\
+- Configure \	ailwind.config.js\ with custom colors and typography
+- Set up \src/index.css\ with Google Fonts imports and reset
+- Create atomic components for \Button\, \Card\, and \Input\ following the "Calm Intelligence" spec
+
+**Verification:** \
+pm run dev\ starts; home page displays with "Outfit" font and Lavender background; Tailwind utilities work.
+
+### Plan 7.2 � API Client + Auth Store
+- Install \xios\, \zustand\, \@tanstack/react-query\
+- Create \src/api/client.ts\ with base URL and response interceptor for 401s
+- Implement \uthStore.ts\ using Zustand to persist access token and user info
+- Add \useAuth\ hook to manage login/logout actions and token storage
+- Create \uthService.ts\ for login, register, and refresh endpoints
+
+**Verification:** Mock 401 response triggers refresh call; successful login updates Zustand state; token is included in subsequent request headers.
+
+### Plan 7.3 � Routing + Main Layout
+- Install \eact-router-dom\
+- Create \src/routes/AppRoutes.tsx\ with Auth guards (Protected vs Public routes)
+- Implement \MainLayout\ with side navigation (Dashboard, Logger, Insights, Analytics, Settings)
+- Create placeholder pages for all routes to verify navigation
+- Set up \src/App.tsx\ with QueryClientProvider and Router
+
+**Verification:** Navigating to protected route without token redirects to Login; successful login allows access to Dashboard; Layout is responsive.
+
+**Success Criteria:**
+1. \web/\ directory exists with a functional Vite app � verified by \ls\ and \
+pm run build\
+2. Tailwind colors and fonts match the "Calm Intelligence" spec � verified by visual check
+3. API interceptor successfully handles token refresh � verified by integration test
+4. Zustand store persists user auth state � verified by devtools/test
+5. Protected routes redirect correctly � verified by manual test
