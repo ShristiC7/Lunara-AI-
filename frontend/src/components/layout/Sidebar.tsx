@@ -98,10 +98,14 @@ export const Sidebar: React.FC = () => {
               }`
             }
           >
-            <div className={`p-2 rounded-xl transition-all ${isActive ? 'bg-lunara-mist soft-glow' : ''}`}>
-              <Icon size={20} strokeWidth={1.5} />
-            </div>
-            <span className={`text-[10px] font-heading font-bold ${isActive ? 'opacity-100' : 'opacity-0'}`}>{label}</span>
+            {({ isActive }) => (
+              <>
+                <div className={`p-2 rounded-xl transition-all ${isActive ? 'bg-lunara-mist soft-glow' : ''}`}>
+                  <Icon size={20} strokeWidth={1.5} />
+                </div>
+                <span className={`text-[10px] font-heading font-bold ${isActive ? 'opacity-100' : 'opacity-0'}`}>{label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
