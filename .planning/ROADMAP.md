@@ -391,4 +391,68 @@
 
 ---
 *Roadmap created: 2026-04-25*
-*Last updated: 2026-04-25 after initial creation*
+*Last updated: 2026-04-26 after Phase 8 initialization*
+
+---
+
+## Phase 8: Community & AI Chatbot Expansion
+
+**Goal:** Create a safe, anonymous space for peer support and a deeply personalized AI health assistant that understands the user's entire biological history.
+
+**UI hint**: yes (Community Feed, Chat Widget)
+
+**Requirements:**
+- COMM-01–06 (Handle system, Post CRUD, Commenting, Symptom sharing, Moderation stubs)
+- CHAT-01–05 (Context-aware chat, Medical disclaimers, Conversation history, History injection)
+
+**Depends on:** Phase 1–7 (Auth, Data Layer, AI Service, Frontend)
+
+**Plans:**
+
+### Plan 8.1 — Community Data Layer & Handle System
+- **Database**: Add `CommunityProfile`, `Post`, and `Comment` models to Prisma.
+- `CommunityProfile` must have a unique `handle` and link to `userId`.
+- **API**: 
+  - `POST /api/community/onboard`: Set the one-time `communityHandle`.
+  - `GET /api/community/posts`: List all posts (anonymous, only `handle` shown).
+  - `POST /api/community/posts`: Create post (include optional `symptomSummary` JSON).
+  - `POST /api/community/posts/:id/comments`: Add a comment.
+- **Service**: `communityService.ts` to handle handle-uniqueness and scoping.
+
+**Verification**: User can set a handle once (error on second attempt). Posts are created and returned without any private `userId` or `email` fields. Comments link correctly to posts.
+
+### Plan 8.2 — Community Feed & Posting UI
+- **Frontend**: New `/community` page with a feed of cards.
+- **Onboarding**: Modal to pick a handle if `user.communityProfile` is null.
+- **Posting**: "Share a Problem" modal with a toggle to "Attach recent symptom summary."
+- **Symptom Summary**: Logic to fetch last 7 days of logs and format as text for the post.
+- **Components**: `PostCard`, `CommentList`, `HandleOnboarding`.
+
+**Verification**: Onboarding modal appears for new users. Handle choice is saved. Posts display correctly with the handle. Symptom summary toggle correctly appends text to the post content.
+
+### Plan 8.3 — AI Chatbot: Context Gathering & OpenAI Flow
+- **FastAPI**: New `POST /chat/completions` endpoint.
+- **Logic**: Fetch user's cycle stats and recent symptoms (passed from Node).
+- **Prompt Engineering**: Build a system prompt that incorporates the health data: *"The user is on Day 14. They have logged 'High Cramps' for 3 days. Use this context to answer..."*
+- **Node API**: `POST /api/chat/message`:
+  - Fetch user history and previous 10 chat messages.
+  - Call FastAPI and return the streamed or bulk response.
+  - Store chat history in a new `ChatSession` table (optional for persistence).
+
+**Verification**: API returns responses that reference the user's logged data (e.g., "I see you've had low energy lately..."). Medical disclaimer is present in every API response payload.
+
+### Plan 8.4 — Chat UI & Security Hardening
+- **Frontend**: Floating Chat Widget accessible from all pages.
+- **UI**: Message bubbles, "Typing..." indicators, and the medical disclaimer footer.
+- **Security**: Strict rate limiting on chat endpoints (prevent OpenAI token abuse).
+- **Hardening**: Add a "Report Content" button to community posts (Moderation stub).
+- **Disclaimer**: Enforce the "AI is not a doctor" warning in the UI onboarding for the chat.
+
+**Verification**: Chat interface works smoothly. Disclaimer is visible. Rate limiting blocks excessive messages. Reporting a post creates a `ModerationLog` in the DB.
+
+**Success Criteria:**
+1. User can choose a handle and post anonymously — verified by integration test.
+2. Community posts can include a snapshot of biological data without exposing the user's ID — verified by API check.
+3. Chatbot accurately references the user's cycle day in its responses — verified by manual test.
+4. Every chat response contains a mandatory medical disclaimer — verified by test.
+5. All social features maintain 80% test coverage — verified by Jest.
