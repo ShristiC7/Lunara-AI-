@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { chatController } from '../controllers/chat.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { requireAuth } from '../middleware/auth.middleware';
 import rateLimit from 'express-rate-limit';
 
 const router = Router();
@@ -15,7 +15,7 @@ const chatLimiter = rateLimit({
   },
 });
 
-router.use(authMiddleware);
+router.use(requireAuth);
 
 router.post('/message', chatLimiter, chatController.sendMessage);
 
