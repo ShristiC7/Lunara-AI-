@@ -4,7 +4,7 @@ import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { useAuthStore } from '../store/authStore';
 import { api } from '../services/api';
-import { Moon, Shield, ChevronRight, ChevronLeft, Sparkles, Heart, Zap } from 'lucide-react';
+import { Moon, Shield, ChevronRight, ChevronLeft, Heart, Zap } from 'lucide-react';
 
 export default function Register() {
   const navigate = useNavigate();
