@@ -1,46 +1,35 @@
 import React from 'react';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  helperText?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
-  label,
-  error,
-  helperText,
-  className = '',
-  ...props
-}) => {
+export const Input: React.FC<InputProps> = ({ label, error, className, ...props }) => {
   return (
-    <div className="w-full flex flex-col gap-1.5">
+    <div className="space-y-1.5 w-full">
       {label && (
-        <label className="text-sm font-medium text-text-primary px-1">
+        <label className="text-xs font-semibold text-slate-500 tracking-tight uppercase px-1">
           {label}
         </label>
       )}
       <input
-        className={`
-          w-full px-4 py-3 rounded-premium border-2 bg-white
-          transition-all duration-200 outline-none
-          ${error 
-            ? 'border-peach focus:border-peach' 
-            : 'border-border-premium focus:border-accent-pink'
-          }
-          placeholder:text-text-secondary/50
-          ${className}
-        `}
+        className={cn(
+          'w-full bg-surface-sunken border border-transparent rounded-premium-md px-4 py-3 text-sm transition-all duration-200 outline-none focus:border-lunara-core/30 focus:bg-white placeholder:text-slate-400',
+          error && 'border-phase-menstrual/50 focus:border-phase-menstrual/50',
+          className
+        )}
         {...props}
       />
       {error && (
-        <p className="text-xs text-accent-pink px-1 mt-0.5 font-medium">
+        <p className="text-xs font-medium text-phase-menstrual px-1 mt-1">
           {error}
-        </p>
-      )}
-      {helperText && !error && (
-        <p className="text-xs text-text-secondary px-1 mt-0.5">
-          {helperText}
         </p>
       )}
     </div>

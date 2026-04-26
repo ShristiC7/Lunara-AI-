@@ -1,38 +1,40 @@
 import React from 'react';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-interface CardProps {
-  children: React.ReactNode;
-  title?: string;
-  subtitle?: string;
-  className?: string;
-  variant?: 'default' | 'peach' | 'lavender';
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
 
-export const Card: React.FC<CardProps> = ({
-  children,
-  title,
-  subtitle,
-  className = '',
-  variant = 'default'
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'sunken' | 'elevated' | 'tinted';
+  noPadding?: boolean;
+}
+
+export const Card: React.FC<CardProps> = ({ 
+  children, 
+  className, 
+  variant = 'default', 
+  noPadding = false,
+  ...props 
 }) => {
   const variants = {
-    default: "bg-white border-border-premium",
-    peach: "bg-peach border-[#FED7AA]",
-    lavender: "bg-lavender border-[#E9D5FF]"
+    default: 'bg-white border border-border-default shadow-sm',
+    sunken: 'bg-surface-sunken border border-transparent shadow-none',
+    elevated: 'bg-white border border-border-default shadow-md',
+    tinted: 'bg-phase-muted border border-phase-color/10 shadow-none',
   };
 
   return (
-    <div className={`
-      rounded-premium border-2 p-6 shadow-subtle
-      ${variants[variant]}
-      ${className}
-    `}>
-      {(title || subtitle) && (
-        <div className="mb-4">
-          {title && <h3 className="text-lg font-semibold text-text-primary">{title}</h3>}
-          {subtitle && <p className="text-sm text-text-secondary">{subtitle}</p>}
-        </div>
+    <div
+      className={cn(
+        'rounded-premium-lg transition-all duration-300',
+        variants[variant],
+        !noPadding && 'p-5 md:p-6',
+        className
       )}
+      {...props}
+    >
       {children}
     </div>
   );
