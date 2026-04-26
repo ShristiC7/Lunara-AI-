@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Share2, Plus, ArrowRight, User as UserIcon, Heart, Send, Sparkles } from 'lucide-react';
+import { MessageSquare, Share2, Plus, ArrowRight, User as UserIcon, Heart, Send, Sparkles, Shield } from 'lucide-react';
 import { communityService, type Post, type CommunityProfile } from '../services/community.service';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
