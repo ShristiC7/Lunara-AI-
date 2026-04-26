@@ -191,5 +191,5 @@
 }
 
 .input-premium:focus {
-  @apply border-accent-lavender border-opacity-50 ring-4 ring-accent-lavender/10;
+  @apply border-accent-lavender/50 ring-4 ring-accent-lavender/10;
 }
