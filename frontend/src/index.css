@@ -30,6 +30,10 @@
   --color-phase-ovulation:  #06B6D4;
   --color-phase-luteal:     #F59E0B;
 
+  /* Dynamic Border Colors */
+  --color-border-default:  var(--border-default);
+  --color-border-emphasis: var(--border-emphasis);
+
   /* Fonts */
   --font-sans: 'Inter', 'Outfit', system-ui, sans-serif;
   --font-heading: 'Outfit', sans-serif;
@@ -92,9 +96,6 @@
 
 /* Utilities */
 @layer utilities {
-  .border-border-default   { border-color: var(--border-default); }
-  .border-border-emphasis  { border-color: var(--border-emphasis); }
-  
   .bg-surface-layered {
     background: var(--surface-layered);
     backdrop-filter: blur(12px);
@@ -184,7 +185,8 @@
 }
 
 .input-premium {
-  @apply w-full rounded-2xl border border-border-default bg-white/50 px-4 py-3 transition-all duration-200;
+  @apply w-full rounded-2xl bg-white/50 px-4 py-3 transition-all duration-200;
+  border: 1px solid var(--border-default);
   backdrop-filter: blur(4px);
 }
 
