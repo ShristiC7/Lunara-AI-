@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User as UserIcon, ShieldAlert, Sparkles, AlertCircle } from 'lucide-react';
-import { chatService, ChatMessage } from '../services/chat.service';
+import { chatService, type ChatMessage } from '../services/chat.service';
 import { Button } from '../components/ui/Button';
 
 export default function Chat() {

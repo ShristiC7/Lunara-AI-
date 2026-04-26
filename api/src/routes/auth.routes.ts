@@ -9,13 +9,13 @@ const router = Router();
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 10, // 10 requests per window
+  max: 50, // Increased for demo
   message: { success: false, error: { code: 'TOO_MANY_REQUESTS', message: 'Too many auth attempts' } }
 });
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 50, // Increased for demo
   message: { success: false, error: { code: 'TOO_MANY_REQUESTS', message: 'Too many login attempts' } }
 });
 

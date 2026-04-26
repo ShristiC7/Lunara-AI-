@@ -1,5 +1,5 @@
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 from sklearn.linear_model import LinearRegression
 import warnings
@@ -80,7 +80,7 @@ class CyclePredictor:
         if cycles:
             last_start = max(c.startDate for c in cycles)
         else:
-            last_start = datetime.now()
+            last_start = datetime.now(timezone.utc)
 
         predicted_date = last_start + timedelta(days=int(round(final_predicted_length)))
         
@@ -90,7 +90,7 @@ class CyclePredictor:
         ovulation_end = ovulation_center + timedelta(days=2)
 
         # --- Phase & Cycle Day Calculation ---
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
         cycle_day = (now - last_start).days + 1
         days_until = (predicted_date - now).days
         
@@ -112,7 +112,7 @@ class CyclePredictor:
             "phase": phase,
             "cycleDay": cycle_day,
             "daysUntil": max(0, days_until),
-            "predictedLength": predicted_length,
-            "finalPredictedLength": final_predicted_length,
-            "symptomAdjustment": min(4.0, symptom_adjustment)
+            "predictedLength": float(predicted_length),
+            "finalPredictedLength": float(final_predicted_length),
+            "symptomAdjustment": float(min(4.0, symptom_adjustment))
         }
