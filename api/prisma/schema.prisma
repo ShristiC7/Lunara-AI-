@@ -21,7 +21,8 @@ model User {
   reports       Report[]
   auditLogs     AuditLog[]
   refreshTokens RefreshToken[]
-  resetTokens   PasswordResetToken[]
+  resetTokens      PasswordResetToken[]
+  communityProfile CommunityProfile?
 }
 
 model RefreshToken {
@@ -117,4 +118,41 @@ model AuditLog {
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
+}
+
+model CommunityProfile {
+  id        String    @id @default(uuid())
+  userId    String    @unique
+  handle    String    @unique
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts     Post[]
+  comments  Comment[]
+}
+
+model Post {
+  id             String           @id @default(uuid())
+  profileId      String
+  authorHandle   String
+  content        String           @db.Text
+  symptomSummary Json?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  profile        CommunityProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  comments       Comment[]
+
+  @@index([createdAt])
+}
+
+model Comment {
+  id           String           @id @default(uuid())
+  postId       String
+  profileId    String
+  authorHandle String
+  content      String           @db.Text
+  createdAt    DateTime         @default(now())
+  post         Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
+  profile      CommunityProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
 }
