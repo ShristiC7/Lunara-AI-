@@ -11,6 +11,8 @@ const Analytics  = React.lazy(() => import("./pages/Analytics"));
 const Settings   = React.lazy(() => import("./pages/Settings"));
 const Login      = React.lazy(() => import("./pages/Login"));
 const Register   = React.lazy(() => import("./pages/Register"));
+const Community  = React.lazy(() => import("./pages/Community"));
+const Chat       = React.lazy(() => import("./pages/Chat"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,7 +53,9 @@ export default function App() {
               <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/insights" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
               <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
-              <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
+              <Route path="/chat"      element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+              <Route path="/settings"  element={<ProtectedRoute><Settings /></ProtectedRoute>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </React.Suspense>

@@ -58,35 +58,40 @@ export default function Dashboard() {
   const primaryInsight = insights?.[0];
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500">
+    <div className="relative space-y-10 animate-in fade-in duration-700">
+      {/* Signature Element: Background Orbs */}
+      <div className="hero-orb top-[-10%] right-[-5%] animate-float" />
+      <div className="hero-orb bottom-[10%] left-[-10%] hero-orb-pink animate-float" style={{ animationDelay: '2s' }} />
+      <div className="hero-orb top-[40%] right-[20%] hero-orb-peach animate-float" style={{ animationDelay: '4s' }} />
+
       {/* Header */}
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start relative z-10">
         <div>
-          <h1 className="text-[26px] font-semibold text-slate-900 tracking-tight">Dashboard</h1>
-          <p className="text-sm text-slate-400 mt-0.5">
+          <h1 className="text-3xl font-heading font-bold text-slate-900 tracking-tight">Dashboard</h1>
+          <p className="text-sm text-slate-400 mt-1">
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </p>
         </div>
       </div>
 
       {/* Main grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 relative z-10">
 
         {/* Left — Cycle Ring + Stats */}
-        <div className="lg:col-span-3 space-y-6">
-          <Card className="relative flex flex-col items-center justify-center py-10 bg-gradient-to-b from-white to-lunara-whisper overflow-hidden">
-            {/* Subtle background glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--phase-color)]/5 blur-[80px] pointer-events-none" />
+        <div className="lg:col-span-3 space-y-8">
+          <Card variant="premium" className="relative flex flex-col items-center justify-center py-12 overflow-hidden border-none">
+            {/* Subtle background glow linked to phase */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[var(--phase-color)]/10 blur-[100px] pointer-events-none animate-pulse" />
             
             <ProgressRing data={prediction} isLoading={predictionLoading} />
             
             {/* Cycle Forecast Bar */}
-            <div className="mt-8 w-full max-w-md px-4">
-              <div className="flex justify-between items-center mb-2">
+            <div className="mt-12 w-full max-w-md px-4">
+              <div className="flex justify-between items-center mb-3">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">7-Day Forecast</span>
                 <span className="text-[10px] font-medium text-slate-400">AI Predicted</span>
               </div>
-              <div className="flex gap-1 h-2 rounded-full overflow-hidden bg-slate-100">
+              <div className="flex gap-1.5 h-2.5 rounded-full overflow-hidden bg-slate-100">
                 {Array.from({ length: 7 }).map((_, i) => {
                   const day = (prediction?.cycleDay || 1) + i;
                   const dPhase = day <= 5 ? 'MENSTRUAL' : day <= 13 ? 'FOLLICULAR' : day <= 16 ? 'OVULATION' : 'LUTEAL';
@@ -94,39 +99,39 @@ export default function Dashboard() {
                   return (
                     <div 
                       key={i} 
-                      className="flex-1 transition-all duration-500" 
-                      style={{ backgroundColor: colors[dPhase], opacity: 0.3 + (i * 0.1) }} 
+                      className="flex-1 transition-all duration-500 hover:scale-y-125 cursor-help" 
+                      style={{ backgroundColor: colors[dPhase], opacity: 0.4 + (i * 0.08) }} 
                       title={`Day ${day}: ${dPhase}`}
                     />
                   );
                 })}
               </div>
-              <div className="flex justify-between mt-1 text-[9px] font-bold text-slate-400 uppercase">
+              <div className="flex justify-between mt-2 text-[9px] font-bold text-slate-400 uppercase tracking-tighter">
                 <span>Today</span>
                 <span>Next Week</span>
               </div>
             </div>
           </Card>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Card className="flex items-center gap-4">
-              <div className="p-2.5 bg-lunara-mist rounded-lg">
-                <Clock size={18} className="text-lunara-core" strokeWidth={1.5} />
+          <div className="grid grid-cols-2 gap-6">
+            <Card variant="premium" className="flex items-center gap-5 border-none">
+              <div className="p-3 bg-lunara-mist rounded-2xl shadow-inner">
+                <Clock size={20} className="text-lunara-core" strokeWidth={1.5} />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Avg Cycle</p>
-                <p className="text-xl font-light font-mono text-slate-900">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Avg Cycle</p>
+                <p className="text-2xl font-light font-mono text-slate-900 mt-0.5">
                   {statsLoading ? '—' : `${stats?.averageCycleLength ?? '—'}d`}
                 </p>
               </div>
             </Card>
-            <Card className="flex items-center gap-4">
-              <div className="p-2.5 bg-lunara-mist rounded-lg">
-                <Activity size={18} className="text-lunara-core" strokeWidth={1.5} />
+            <Card variant="premium" className="flex items-center gap-5 border-none">
+              <div className="p-3 bg-lunara-mist rounded-2xl shadow-inner">
+                <Activity size={20} className="text-lunara-core" strokeWidth={1.5} />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Regularity</p>
-                <p className="text-xl font-light font-mono text-slate-900">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Regularity</p>
+                <p className="text-2xl font-light font-mono text-slate-900 mt-0.5">
                   {statsLoading ? '—' : stats?.regularityScore ? `${stats.regularityScore}%` : '—'}
                 </p>
               </div>
@@ -135,12 +140,16 @@ export default function Dashboard() {
         </div>
 
         {/* Right — Prediction + Insights */}
-        <div className="lg:col-span-2 space-y-4">
-          <NextPeriodCard data={prediction} />
+        <div className="lg:col-span-2 space-y-6">
+          <div className="transform hover:scale-[1.02] transition-transform duration-300">
+            <NextPeriodCard data={prediction} />
+          </div>
 
           {insightsLoading
             ? <div className="h-20 rounded-premium-lg bg-lunara-mist animate-pulse" />
-            : <InsightCard insight={primaryInsight} isLoading={insightsLoading} />
+            : <div className="transform hover:scale-[1.02] transition-transform duration-300">
+                <InsightCard insight={primaryInsight} isLoading={insightsLoading} />
+              </div>
           }
         </div>
       </div>

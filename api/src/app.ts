@@ -16,6 +16,8 @@ import aiRouter from './routes/ai.routes';
 import jobRouter from './routes/job.routes';
 import reportRouter from './routes/report.routes';
 import predictionRouter from './routes/prediction.routes';
+import communityRouter from './routes/community.routes';
+import chatRouter from './routes/chat.routes';
 
 const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -61,6 +63,8 @@ export function createApp(): Application {
   app.use('/api/v1/jobs', jobRouter);
   app.use('/api/v1/reports', reportRouter);
   app.use('/api/v1/predictions', predictionRouter);
+  app.use('/api/v1/community', communityRouter);
+  app.use('/api/v1/chat', chatRouter);
 
   app.use(notFoundHandler);
   app.use(globalErrorHandler);
