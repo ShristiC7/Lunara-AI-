@@ -23,7 +23,7 @@ async def health():
 @app.post("/predict/cycle", response_model=CyclePredictionResponse)
 async def predict_cycle(request: CyclePredictionRequest):
     try:
-        prediction = CyclePredictor.predict(request.cycles)
+        prediction = CyclePredictor.predict(request.cycles, request.symptoms)
         return prediction
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

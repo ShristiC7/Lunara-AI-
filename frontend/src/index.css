@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors */
+  --color-lunara-core:     #7C3AED;
+  --color-lunara-glow:     #9D5FF5;
+  --color-lunara-bloom:    #C084FC;
+  --color-lunara-mist:     #EDE9FE;
+  --color-lunara-whisper:  #FAF5FF;
+  --color-lunara-midnight: #12091E;
+
+  /* Surface Colors */
+  --color-surface-bg:     #FAF5FF;
+  --color-surface-card:   #FFFFFF;
+  --color-surface-sunken: #F3E8FF;
+  --color-surface-hover:  #EDE9FE;
+
+  /* Phase Colors */
+  --color-phase-menstrual:  #F43F5E;
+  --color-phase-follicular: #8B5CF6;
+  --color-phase-ovulation:  #06B6D4;
+  --color-phase-luteal:     #F59E0B;
+
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Border Radius */
+  --radius-premium-sm:  8px;
+  --radius-premium-md:  12px;
+  --radius-premium-lg:  16px;
+  --radius-premium-xl:  20px;
+  --radius-premium-2xl: 28px;
+
+  /* Animations */
+  --animate-confirm:      confirmSpring 400ms cubic-bezier(0.34,1.56,0.64,1) forwards;
+  --animate-gentle-pulse: gentlePulse 3s ease-in-out infinite;
+}
+
+/* Dynamic Phase Tokens — updated by ThemeContext */
+:root {
+  --phase-color: #7C3AED;
+  --phase-light: #EDE9FE;
+  --phase-muted: rgba(124,58,237,0.12);
+  --border-default:  rgba(124,58,237,0.12);
+  --border-emphasis: rgba(124,58,237,0.24);
+}
+
+/* Base Styles */
+@layer base {
+  body {
+    background-color: #FAF5FF;
+    font-family: var(--font-sans);
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.011em;
+  }
+
+  h1 { font-size: 26px; font-weight: 600; line-height: 1.3; letter-spacing: -0.02em; }
+  h2 { font-size: 20px; font-weight: 600; line-height: 1.35; letter-spacing: -0.02em; }
+  h3 { font-size: 16px; font-weight: 500; line-height: 1.4; letter-spacing: -0.02em; }
+
+  ::selection { background-color: #EDE9FE; }
+
+  *:focus-visible {
+    outline: 2px solid #7C3AED;
+    outline-offset: 2px;
+  }
+}
+
+/* Utilities */
+@layer utilities {
+  .border-border-default   { border-color: var(--border-default); }
+  .border-border-emphasis  { border-color: var(--border-emphasis); }
+  .bg-surface-bg           { background-color: #FAF5FF; }
+  .bg-surface-card         { background-color: #FFFFFF; }
+  .bg-surface-sunken       { background-color: #F3E8FF; }
+  .bg-surface-hover        { background-color: #EDE9FE; }
+  .text-phase-color        { color: var(--phase-color); }
+  .bg-phase-muted          { background-color: var(--phase-muted); }
+  .bg-phase-light          { background-color: var(--phase-light); }
+  .rounded-premium-sm      { border-radius: 8px; }
+  .rounded-premium-md      { border-radius: 12px; }
+  .rounded-premium-lg      { border-radius: 16px; }
+  .rounded-premium-xl      { border-radius: 20px; }
+  .rounded-premium-2xl     { border-radius: 28px; }
+  .shadow-float            { box-shadow: 0 8px 32px rgba(124,58,237,0.40); }
+  .hide-scrollbar          { -ms-overflow-style: none; scrollbar-width: none; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .tracking-tight          { letter-spacing: -0.02em; }
+}
+
+/* Keyframes */
+@keyframes confirmSpring {
+  0%   { transform: scale(0);    opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  80%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes gentlePulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.75; }
+}
+
+.animate-confirm      { animation: confirmSpring 400ms cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.animate-gentle-pulse { animation: gentlePulse 3s ease-in-out infinite; }
