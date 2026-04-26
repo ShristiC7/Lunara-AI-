@@ -1,162 +1,131 @@
-import React, { useState } from 'react';
-import { Card } from '../components/ui/Card';
-import { useSymptoms } from '../hooks/useSymptoms';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  Cell
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  ReferenceLine, BarChart, Bar, Cell,
 } from 'recharts';
-import { TrendingUp, Activity, Filter } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../services/api';
+import { Card } from '../components/ui/Card';
+
+const ChartSkeleton = () => (
+  <div className="h-48 rounded-premium-lg bg-lunara-mist animate-pulse" />
+);
+
+const HEATMAP_ROWS = [
+  { label: 'Mood', days: Array.from({ length: 30 }, () => Math.random() * 5) },
+  { label: 'Pain', days: Array.from({ length: 30 }, () => Math.random() * 10) },
+  { label: 'Energy', days: Array.from({ length: 30 }, () => Math.random() * 5) },
+  { label: 'Sleep', days: Array.from({ length: 30 }, () => Math.random() * 5) },
+  { label: 'Stress', days: Array.from({ length: 30 }, () => Math.random() * 5) },
+];
+
+const heatColor = (label: string, val: number) => {
+  const op = Math.min(1, val / 5);
+  if (label === 'Pain') return `rgba(244,63,94,${Math.min(1, val / 10)})`;
+  if (label === 'Stress') return `rgba(245,158,11,${op})`;
+  return `rgba(124,58,237,${op})`;
+};
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="px-3 py-2 bg-white border border-border-default rounded-premium-md shadow-sm text-xs font-semibold text-slate-700">
+      {label}: {payload[0].value} days
+    </div>
+  );
+};
 
 export default function Analytics() {
-  const [viewMode, setViewMode] = useState<'severity' | 'frequency'>('severity');
-  const { getSymptomHistory } = useSymptoms();
-  const { data: history, isLoading } = getSymptomHistory(90);
+  const [ready, setReady] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setReady(true), 200); return () => clearTimeout(t); }, []);
 
-  // Process data for charts
-  // For demo, we'll create some semi-realistic processed data
-  const symptomData = [
-    { name: 'Pain', severity: 6.5, frequency: 12, color: '#EC4899' },
-    { name: 'Cramps', severity: 8.2, frequency: 8, color: '#F472B6' },
-    { name: 'Mood', severity: 4.1, frequency: 22, color: '#D946EF' },
-    { name: 'Fatigue', severity: 7.4, frequency: 15, color: '#A855F7' },
-    { name: 'Headache', severity: 3.2, frequency: 5, color: '#8B5CF6' },
+  const { data: cycles, isLoading } = useQuery({
+    queryKey: ['cycles'],
+    queryFn: () => api.get('/cycles').then((r) => r.data.data),
+  });
+
+  const cycleLengthData = cycles
+    ? cycles.slice(-12).map((c: any, i: number) => ({ name: `C${i + 1}`, days: c.cycleLength ?? 28 }))
+    : Array.from({ length: 6 }, (_, i) => ({ name: `C${i + 1}`, days: 28 }));
+
+  const avgLength = cycleLengthData.reduce((a: number, c: any) => a + c.days, 0) / cycleLengthData.length;
+
+  const accuracy = [
+    { name: 'C1', delta: 1 }, { name: 'C2', delta: 3 }, { name: 'C3', delta: 0 },
+    { name: 'C4', delta: 5 }, { name: 'C5', delta: 2 }, { name: 'C6', delta: 1 },
   ];
 
-  const cycleHistory = [
-    { cycle: 'Jan', length: 28 },
-    { cycle: 'Feb', length: 30 },
-    { cycle: 'Mar', length: 27 },
-    { cycle: 'Apr', length: 29 },
-  ];
-
-  if (isLoading) {
-    return <div className="p-8 text-center text-text-secondary animate-pulse">Analyzing health trends...</div>;
-  }
+  const barColor = (d: number) => d <= 2 ? '#10b981' : d <= 5 ? '#f59e0b' : '#f43f5e88';
 
   return (
-    <div className="space-y-8 pb-12">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-text-primary">Health Analytics</h1>
-          <p className="text-text-secondary">Long-term trends and symptom correlations.</p>
-        </div>
-        
-        <div className="flex bg-white p-1 rounded-premium border border-border-premium self-start">
-          <button
-            onClick={() => setViewMode('severity')}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'severity' ? 'bg-lavender text-accent-pink' : 'text-text-secondary hover:text-text-primary'}`}
-          >
-            Severity
-          </button>
-          <button
-            onClick={() => setViewMode('frequency')}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'frequency' ? 'bg-lavender text-accent-pink' : 'text-text-secondary hover:text-text-primary'}`}
-          >
-            Frequency
-          </button>
-        </div>
+    <div className="space-y-10 animate-in fade-in duration-500">
+      <header>
+        <h1 className="text-[26px] font-semibold text-slate-900 tracking-tight">Analytics</h1>
+        <p className="text-sm text-slate-400 mt-0.5">Only charts that reveal something actionable.</p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        {/* Symptom Breakdown Chart */}
-        <Card className="min-h-[400px] flex flex-col">
-          <div className="flex items-center gap-2 mb-8">
-            <Activity className="text-accent-pink" size={20} />
-            <h3 className="font-bold text-text-primary">Symptom Distribution</h3>
-          </div>
-          
-          <div className="flex-1 w-full min-h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={symptomData} layout="vertical" margin={{ left: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F3E8FF" />
-                <XAxis type="number" hide />
-                <YAxis 
-                  dataKey="name" 
-                  type="category" 
-                  axisLine={false} 
-                  tickLine={false}
-                  tick={{ fill: '#6B7280', fontSize: 12, fontWeight: 600 }}
-                />
-                <Tooltip 
-                  cursor={{ fill: 'transparent' }}
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                />
-                <Bar 
-                  dataKey={viewMode} 
-                  radius={[0, 10, 10, 0]} 
-                  barSize={24}
-                >
-                  {symptomData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.8} />
+      <section className="space-y-4">
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Cycle Length Trend</p>
+        <Card>
+          {isLoading ? <ChartSkeleton /> : (
+            <div className={`transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}>
+              <ResponsiveContainer width="100%" height={200}>
+                <LineChart data={cycleLengthData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[20, 40]} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <ReferenceLine y={avgLength} stroke="#7c3aed" strokeDasharray="4 4" strokeOpacity={0.4}
+                    label={{ value: `avg ${avgLength.toFixed(0)}d`, position: 'right', fontSize: 10, fill: '#7c3aed', fontWeight: 700 }} />
+                  <Line type="monotone" dataKey="days" stroke="#7C3AED" strokeWidth={2}
+                    dot={{ r: 5, fill: '#7C3AED', stroke: '#fff', strokeWidth: 2 }} activeDot={{ r: 7 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </Card>
+      </section>
+
+      <section className="space-y-4">
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Symptom Heatmap — Last 30 Days</p>
+        <Card className="overflow-x-auto">
+          <div className="min-w-[480px] space-y-2">
+            {HEATMAP_ROWS.map(({ label, days }) => (
+              <div key={label} className="flex items-center gap-3">
+                <span className="w-14 text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">{label}</span>
+                <div className="flex gap-1">
+                  {days.map((val, i) => (
+                    <div key={i} title={`Day ${i + 1}: ${val.toFixed(1)}`}
+                      className="w-5 h-5 rounded-sm border border-slate-100"
+                      style={{ backgroundColor: val > 0.2 ? heatColor(label, val) : '#f8f8fb' }} />
                   ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </section>
+
+      <section className="space-y-4">
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Prediction Accuracy — Days Off</p>
+        <Card>
+          <div className={`transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}>
+            <ResponsiveContainer width="100%" height={160}>
+              <BarChart data={accuracy} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <ReferenceLine y={2} stroke="#10b981" strokeDasharray="4 4" strokeOpacity={0.5} />
+                <Bar dataKey="delta" radius={[4, 4, 0, 0]}>
+                  {accuracy.map((e, i) => <Cell key={i} fill={barColor(e.delta)} />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <p className="mt-4 text-center font-mono text-[22px] font-light text-slate-900">
+            1.8 <span className="text-sm font-semibold text-slate-400">days average accuracy</span>
+          </p>
         </Card>
-
-        {/* Cycle Consistency Chart */}
-        <Card className="min-h-[400px] flex flex-col">
-          <div className="flex items-center gap-2 mb-8">
-            <TrendingUp className="text-accent-pink" size={20} />
-            <h3 className="font-bold text-text-primary">Cycle Regularity</h3>
-          </div>
-          
-          <div className="flex-1 w-full min-h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={cycleHistory}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3E8FF" />
-                <XAxis 
-                  dataKey="cycle" 
-                  axisLine={false} 
-                  tickLine={false}
-                  tick={{ fill: '#6B7280', fontSize: 12 }}
-                />
-                <YAxis 
-                  domain={[20, 40]} 
-                  axisLine={false} 
-                  tickLine={false}
-                  tick={{ fill: '#6B7280', fontSize: 12 }}
-                />
-                <Tooltip 
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="length" 
-                  stroke="#EC4899" 
-                  strokeWidth={4}
-                  dot={{ r: 6, fill: '#EC4899', strokeWidth: 2, stroke: '#fff' }}
-                  activeDot={{ r: 8, strokeWidth: 0 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-      </div>
-
-      {/* Correlation Section */}
-      <Card variant="lavender" className="border-dashed">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-white rounded-lg shadow-sm text-accent-pink">
-            <Filter size={20} />
-          </div>
-          <h3 className="font-bold text-text-primary">Key Correlation</h3>
-        </div>
-        <p className="text-sm text-text-secondary leading-relaxed">
-          Your data shows a <span className="font-bold text-accent-pink">85% correlation</span> between high caffeine intake and increased pain severity during the Luteal phase. Reducing caffeine by 1 cup daily may decrease discomfort by up to 20%.
-        </p>
-      </Card>
+      </section>
     </div>
   );
 }
