@@ -16,7 +16,7 @@ export const chatService = {
         where: { userId },
         orderBy: { startDate: 'desc' },
       }),
-      prisma.symptoms.findMany({
+      prisma.symptom.findMany({
         where: {
           userId,
           date: { gte: thirtyDaysAgo },
