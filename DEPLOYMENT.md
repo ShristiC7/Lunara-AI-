@@ -53,6 +53,7 @@ graph TD
 5. **Config**:
    - Set **Root Directory** to `ai`.
    - Add these Environment Variables:
+     - `PYTHON_VERSION`: `3.11.8` (Crucial for preventing build failures)
      - `OPENAI_API_KEY`: Your GPT-4o key.
      - `JWT_SECRET`: Same secret used by the Node API.
      - `LOG_LEVEL`: `INFO`
