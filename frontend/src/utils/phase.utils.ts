@@ -43,6 +43,6 @@ export const PHASE_CONFIG = {
 export function getPhaseFromDay(day: number) {
   if (day <= 5) return 'MENSTRUAL';
   if (day <= 13) return 'FOLLICULAR';
-  if (day <= 16) return 'OVULATORY';
+  if (day <= 16) return 'OVULATION';
   return 'LUTEAL';
 }

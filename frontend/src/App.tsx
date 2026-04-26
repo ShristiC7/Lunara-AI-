@@ -25,13 +25,12 @@ const queryClient = new QueryClient({
 });
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  // const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  // return isAuthenticated ? (
-  //   <AppShell>{children}</AppShell>
-  // ) : (
-  //   <Navigate to="/login" replace />
-  // );
-  return <AppShell>{children}</AppShell>;
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  return isAuthenticated ? (
+    <AppShell>{children}</AppShell>
+  ) : (
+    <Navigate to="/login" replace />
+  );
 }
 
 const Fallback = () => (

@@ -53,7 +53,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         // Refresh failed (likely expired refresh token) -> force logout
         useAuthStore.getState().clearAuth();
-        // window.location.href = "/login";
+        window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }
