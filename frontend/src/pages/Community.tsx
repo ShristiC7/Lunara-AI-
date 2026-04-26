@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Share2, Plus, ArrowRight, User as UserIcon, Heart, Send, Sparkles, Shield } from 'lucide-react';
+import { MessageSquare, Plus, ArrowRight, User as UserIcon, Heart, Send, Sparkles, Shield } from 'lucide-react';
 import { communityService, type Post, type CommunityProfile } from '../services/community.service';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 
 export default function Community() {
-  const [profile, setProfile] = useState<CommunityProfile | null>(null);
+  const [, setProfile] = useState<CommunityProfile | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -199,7 +199,7 @@ export default function Community() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
           >
-            <Card variant="premium" className="hover:scale-[1.01] transition-all cursor-pointer group border-none p-8">
+            <Card variant="elevated" className="hover:scale-[1.01] transition-all cursor-pointer group border-none p-8">
               <div className="flex gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200/50 flex items-center justify-center shrink-0 shadow-sm">
                   <UserIcon size={24} className="text-slate-400" />

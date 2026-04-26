@@ -79,7 +79,7 @@ export default function Dashboard() {
 
         {/* Left — Cycle Ring + Stats */}
         <div className="lg:col-span-3 space-y-8">
-          <Card variant="premium" className="relative flex flex-col items-center justify-center py-12 overflow-hidden border-none">
+          <Card variant="elevated" className="relative flex flex-col items-center justify-center py-12 overflow-hidden border-none">
             {/* Subtle background glow linked to phase */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[var(--phase-color)]/10 blur-[100px] pointer-events-none animate-pulse" />
             
@@ -114,7 +114,7 @@ export default function Dashboard() {
           </Card>
 
           <div className="grid grid-cols-2 gap-6">
-            <Card variant="premium" className="flex items-center gap-5 border-none">
+            <Card variant="elevated" className="flex items-center gap-5 border-none">
               <div className="p-3 bg-lunara-mist rounded-2xl shadow-inner">
                 <Clock size={20} className="text-lunara-core" strokeWidth={1.5} />
               </div>
@@ -125,7 +125,7 @@ export default function Dashboard() {
                 </p>
               </div>
             </Card>
-            <Card variant="premium" className="flex items-center gap-5 border-none">
+            <Card variant="elevated" className="flex items-center gap-5 border-none">
               <div className="p-3 bg-lunara-mist rounded-2xl shadow-inner">
                 <Activity size={20} className="text-lunara-core" strokeWidth={1.5} />
               </div>
