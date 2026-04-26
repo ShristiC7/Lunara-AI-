@@ -32,8 +32,8 @@ export const Sidebar: React.FC = () => {
         <div className="absolute top-[-100px] left-[-100px] w-64 h-64 bg-lunara-mist/40 blur-[100px] rounded-full pointer-events-none" />
         
         {/* Brand */}
-        <div className="px-6 py-8 flex items-center gap-3 relative z-10">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-lunara-core to-lunara-glow flex items-center justify-center shadow-lg shadow-lunara-core/20">
+        <div className="px-6 py-8 flex items-center gap-3 relative z-10 group cursor-pointer">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-lunara-core to-lunara-glow flex items-center justify-center shadow-lg shadow-lunara-core/20 soft-glow transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
             <Moon className="text-white" size={20} strokeWidth={1.5} fill="currentColor" />
           </div>
           <span className="text-xl font-heading font-bold tracking-tight text-slate-900">
