@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { communityController } from '../controllers/community.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+import { requireAuth } from '../middleware/auth.middleware';
 import { z } from 'zod';
 
 const router = Router();
@@ -30,7 +30,7 @@ const validate = (schema: z.ZodSchema) => (req: any, res: any, next: any) => {
   }
 };
 
-router.use(authMiddleware);
+router.use(requireAuth);
 
 router.get('/profile', communityController.getProfile);
 router.post('/onboard', validate(onboardSchema), communityController.onboard);
