@@ -15,6 +15,9 @@ import symptomRouter from './routes/symptom.routes';
 import aiRouter from './routes/ai.routes';
 import jobRouter from './routes/job.routes';
 import reportRouter from './routes/report.routes';
+import predictionRouter from './routes/prediction.routes';
+import communityRouter from './routes/community.routes';
+import chatRouter from './routes/chat.routes';
 
 const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -51,14 +54,17 @@ export function createApp(): Application {
 
   app.use(createRequestLogger());
 
-  app.use('/api/health', healthRouter);
-  app.use('/api/auth', authRouter);
-  app.use('/api/users', userRouter);
-  app.use('/api/cycles', cycleRouter);
-  app.use('/api/symptoms', symptomRouter);
-  app.use('/api/insights', aiRouter);
-  app.use('/api/jobs', jobRouter);
-  app.use('/api/reports', reportRouter);
+  app.use('/api/v1/health', healthRouter);
+  app.use('/api/v1/auth', authRouter);
+  app.use('/api/v1/users', userRouter);
+  app.use('/api/v1/cycles', cycleRouter);
+  app.use('/api/v1/symptoms', symptomRouter);
+  app.use('/api/v1/insights', aiRouter);
+  app.use('/api/v1/jobs', jobRouter);
+  app.use('/api/v1/reports', reportRouter);
+  app.use('/api/v1/predictions', predictionRouter);
+  app.use('/api/v1/community', communityRouter);
+  app.use('/api/v1/chat', chatRouter);
 
   app.use(notFoundHandler);
   app.use(globalErrorHandler);

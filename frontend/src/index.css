@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors - Upgraded to Premium Palette */
+  --color-lunara-core:     #7C3AED;
+  --color-lunara-glow:     #9D5FF5;
+  --color-lunara-bloom:    #C084FC;
+  --color-lunara-mist:     #EDE9FE;
+  --color-lunara-whisper:  #FAF5FF;
+  --color-lunara-midnight: #12091E;
+
+  /* Premium Accent Layer */
+  --color-accent-pink-soft:    #FBCFE8;
+  --color-accent-pink-main:    #F472B6;
+  --color-accent-lavender:     #C4B5FD;
+  --color-accent-lavender-deep:#A78BFA;
+  --color-accent-peach-soft:   #FED7AA;
+  --color-accent-peach-main:   #FB923C;
+
+  /* Surface Colors */
+  --color-surface-bg:     #FAF9FF;
+  --color-surface-card:   #FFFFFF;
+  --color-surface-sunken: #F3E8FF;
+  --color-surface-hover:  #EDE9FE;
+
+  /* Phase Colors */
+  --color-phase-menstrual:  #F43F5E;
+  --color-phase-follicular: #8B5CF6;
+  --color-phase-ovulation:  #06B6D4;
+  --color-phase-luteal:     #F59E0B;
+
+  /* Fonts */
+  --font-sans: 'Inter', 'Outfit', system-ui, sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Border Radius */
+  --radius-premium-sm:  8px;
+  --radius-premium-md:  12px;
+  --radius-premium-lg:  16px;
+  --radius-premium-xl:  20px;
+  --radius-premium-2xl: 32px;
+
+  /* Animations */
+  --animate-confirm:      confirmSpring 400ms cubic-bezier(0.34,1.56,0.64,1) forwards;
+  --animate-gentle-pulse: gentlePulse 3s ease-in-out infinite;
+  --animate-float:        float 6s ease-in-out infinite;
+}
+
+/* Dynamic Phase Tokens — updated by ThemeContext */
+:root {
+  --phase-color: #7C3AED;
+  --phase-light: #EDE9FE;
+  --phase-muted: rgba(124,58,237,0.12);
+  --border-default:  rgba(124,58,237,0.08);
+  --border-emphasis: rgba(124,58,237,0.16);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #FBCFE8 0%, #C4B5FD 50%, #FED7AA 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(251,207,232,0.15), rgba(196,181,253,0.15), rgba(254,215,170,0.15));
+  --surface-layered: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+}
+
+/* Base Styles */
+@layer base {
+  body {
+    background-color: #FAF9FF;
+    font-family: var(--font-sans);
+    color: #1e293b;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.011em;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    color: #0f172a;
+  }
+
+  h1 { font-size: 32px; font-weight: 700; line-height: 1.2; letter-spacing: -0.03em; }
+  h2 { font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.02em; }
+  h3 { font-size: 18px; font-weight: 600; line-height: 1.4; letter-spacing: -0.01em; }
+
+  ::selection { background-color: #FBCFE8; color: #7C3AED; }
+
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(196,181,253,0.3);
+  }
+}
+
+/* Utilities */
+@layer utilities {
+  .border-border-default   { border-color: var(--border-default); }
+  .border-border-emphasis  { border-color: var(--border-emphasis); }
+  
+  .bg-surface-layered {
+    background: var(--surface-layered);
+    backdrop-filter: blur(12px);
+  }
+
+  .premium-card {
+    background: white;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .premium-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-soft);
+    opacity: 0.3;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .premium-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(124,58,237,0.08), 0 0 20px rgba(196,181,253,0.1);
+  }
+
+  .soft-glow {
+    box-shadow: 0 0 40px rgba(196,181,253,0.2);
+  }
+
+  /* Signature Element: Orb / Aura System */
+  .hero-orb {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--color-accent-lavender) 0%, transparent 70%);
+    filter: blur(80px);
+    opacity: 0.35;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero-orb-pink {
+    background: radial-gradient(circle, var(--color-accent-pink-soft) 0%, transparent 70%);
+    opacity: 0.25;
+  }
+
+  .hero-orb-peach {
+    background: radial-gradient(circle, var(--color-accent-peach-soft) 0%, transparent 70%);
+    opacity: 0.2;
+  }
+
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+/* Keyframes */
+@keyframes confirmSpring {
+  0%   { transform: scale(0);    opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  80%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes gentlePulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.75; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Custom Micro-interactions */
+.btn-premium {
+  @apply rounded-full px-6 py-2.5 font-semibold transition-all duration-200 active:scale-95 flex items-center justify-center gap-2;
+  background: var(--gradient-primary);
+  box-shadow: 0 4px 12px rgba(244,114,182,0.2);
+}
+
+.btn-premium:hover {
+  @apply brightness-105;
+  box-shadow: 0 6px 20px rgba(244,114,182,0.3);
+}
+
+.input-premium {
+  @apply w-full rounded-2xl border border-border-default bg-white/50 px-4 py-3 transition-all duration-200;
+  backdrop-filter: blur(4px);
+}
+
+.input-premium:focus {
+  @apply border-accent-lavender border-opacity-50 ring-4 ring-accent-lavender/10;
+}

@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from ..schemas.symptom_schemas import SymptomEntry, SymptomAnalysisResponse
 from ..utils.openai_client import analyze_with_openai
 
