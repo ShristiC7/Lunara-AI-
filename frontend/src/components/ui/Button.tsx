@@ -1,46 +1,52 @@
 import React from 'react';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'pill';
   isLoading?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
+  className,
   variant = 'primary',
   size = 'md',
   isLoading,
-  className = '',
-  disabled,
   ...props
 }) => {
-  const baseStyles = "inline-flex items-center justify-center font-medium transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
-  
   const variants = {
-    primary: "bg-accent-pink text-white hover:opacity-90 shadow-subtle",
-    secondary: "bg-soft-pink text-accent-pink hover:bg-[#F9D7E8]",
-    outline: "border-2 border-border-premium text-text-primary hover:bg-background",
-    ghost: "text-text-secondary hover:text-text-primary hover:bg-background"
+    primary: 'bg-lunara-core text-white hover:bg-lunara-glow shadow-sm',
+    secondary: 'bg-lunara-mist text-lunara-core hover:bg-lunara-core/10',
+    outline: 'bg-transparent border border-border-emphasis text-lunara-core hover:bg-lunara-mist',
+    ghost: 'bg-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary',
   };
 
   const sizes = {
-    sm: "px-4 py-2 text-sm rounded-button",
-    md: "px-6 py-3 text-base rounded-button",
-    lg: "px-8 py-4 text-lg rounded-button"
+    sm: 'px-3 py-1.5 text-xs font-medium rounded-premium-sm',
+    md: 'px-6 py-3 text-sm font-semibold rounded-premium-md',
+    lg: 'px-8 py-4 text-base font-bold rounded-premium-lg',
+    pill: 'px-8 py-3 text-sm font-bold rounded-premium-2xl',
   };
 
   return (
     <button
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
-      disabled={disabled || isLoading}
+      className={cn(
+        'inline-flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-lunara-core/20 focus:ring-offset-2',
+        variants[variant],
+        sizes[size],
+        className
+      )}
+      disabled={isLoading}
       {...props}
     >
       {isLoading ? (
-        <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-        </svg>
+        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       ) : null}
       {children}
     </button>
