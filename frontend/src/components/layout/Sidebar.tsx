@@ -7,11 +7,15 @@ import {
   SlidersHorizontal,
   LogOut,
   Moon,
+  MessageSquare,
+  Bot,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 
 const NAV_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+  { icon: MessageSquare, label: 'Community', path: '/community' },
+  { icon: Bot, label: 'Ask Lunara', path: '/chat' },
   { icon: Sparkles, label: 'AI Insights', path: '/insights' },
   { icon: BarChart3, label: 'Analytics', path: '/analytics' },
   { icon: SlidersHorizontal, label: 'Settings', path: '/settings' },
