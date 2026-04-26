@@ -67,8 +67,7 @@ export const startAiWorker = () => {
           userId: job.data.userId,
           action: 'AI_ANALYSIS_FAILED',
           resource: 'AiInsight',
-          status: 'failure',
-          metadata: { errorMessage: err.message, jobId: job.id } as any,
+          metadata: { status: 'failure', errorMessage: err.message, jobId: job.id } as any,
         },
       });
     }
