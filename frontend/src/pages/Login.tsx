@@ -4,7 +4,7 @@ import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { useAuthStore } from '../store/authStore';
 import { api } from '../services/api';
-import { Moon, Shield, Chrome, Apple } from 'lucide-react';
+import { Moon, Shield, Globe, Smartphone } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -116,10 +116,10 @@ export default function Login() {
 
             <div className="grid grid-cols-2 gap-4">
               <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-border-default rounded-premium-md text-sm font-semibold text-slate-700 hover:bg-surface-sunken transition-colors">
-                <Chrome size={18} className="text-slate-500" /> Google
+                <Globe size={18} className="text-slate-500" /> Google
               </button>
               <button type="button" className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-border-default rounded-premium-md text-sm font-semibold text-slate-700 hover:bg-surface-sunken transition-colors">
-                <Apple size={18} className="text-slate-500" /> Apple
+                <Smartphone size={18} className="text-slate-500" /> Apple
               </button>
             </div>
           </form>
