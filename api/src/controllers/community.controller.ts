@@ -29,14 +29,14 @@ export const communityController = {
 
   getPostDetail: asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const post = await communityService.getPostById(id);
+    const post = await communityService.getPostById(id as string);
     res.json({ success: true, data: post });
   }),
 
   addComment: asyncHandler(async (req: Request, res: Response) => {
     const { id: postId } = req.params;
     const { content } = req.body;
-    const comment = await communityService.addComment(req.userId!, postId, content);
+    const comment = await communityService.addComment(req.userId!, postId as string, content);
     res.status(201).json({ success: true, data: comment });
   }),
 };

@@ -38,8 +38,8 @@ export const startReportWorker = () => {
         })),
         commonSymptoms: Array.from(new Set(symptoms.map(s => s.notes).filter(Boolean))).slice(0, 5),
         latestInsight: latestInsightRaw ? (latestInsightRaw.content as any).pattern_summary : 'No insights generated yet.',
-        nextPredictedDate: prediction.predictedDate,
-        confidence: prediction.confidence
+        nextPredictedDate: (prediction as any).predictedDate,
+        confidence: (prediction as any).confidence
       };
 
       // 3. Generate PDF
