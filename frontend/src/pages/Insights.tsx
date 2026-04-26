@@ -45,7 +45,9 @@ export default function Insights() {
                 <div className="pl-4 space-y-3">
                   <div className="flex items-start gap-2">
                     <div className="mt-0.5 w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: 'var(--phase-color)' }} />
-                    <p className="text-sm text-slate-700 leading-relaxed max-w-[60ch]">{insight.content}</p>
+                    <p className="text-sm text-slate-700 leading-relaxed max-w-[60ch]">
+                      {typeof insight.content === 'string' ? insight.content : insight.content?.summary}
+                    </p>
                   </div>
                   {/* Evidence bar */}
                   <div className="space-y-1.5">
