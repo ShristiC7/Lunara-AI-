@@ -20,7 +20,7 @@ export const PHASE_CONFIG = {
     description: 'Energy builds. A good time to start new things.',
     dayRange: [6, 13],
   },
-  OVULATION: {
+  OVULATORY: {
     label: 'Ovulation',
     color: '#06B6D4',
     colorLight: '#F0FDFE',
@@ -43,6 +43,6 @@ export const PHASE_CONFIG = {
 export function getPhaseFromDay(day: number) {
   if (day <= 5) return 'MENSTRUAL';
   if (day <= 13) return 'FOLLICULAR';
-  if (day <= 16) return 'OVULATION';
+  if (day <= 16) return 'OVULATORY';
   return 'LUTEAL';
 }
