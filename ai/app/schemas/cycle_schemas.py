@@ -19,4 +19,5 @@ class CyclePredictionResponse(BaseModel):
     ovulationEnd: datetime
     confidence: str = Field(..., pattern="^(LOW|MEDIUM|HIGH)$")
     predictedLength: Optional[float] = None
+    finalPredictedLength: Optional[float] = None
     symptomAdjustment: Optional[float] = None
