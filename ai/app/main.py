@@ -4,6 +4,8 @@ from .schemas.cycle_schemas import CyclePredictionRequest, CyclePredictionRespon
 from .schemas.symptom_schemas import SymptomAnalysisRequest, SymptomAnalysisResponse
 from .services.cycle_predictor import CyclePredictor
 from .services.symptom_analyzer import SymptomAnalyzer
+from .schemas.chat_schemas import ChatRequest, ChatResponse
+from .services.chat_service import ChatService
 import uvicorn
 
 app = FastAPI(title="Lunara AI Service")
@@ -33,6 +35,18 @@ async def analyze_symptoms(request: SymptomAnalysisRequest):
     try:
         analysis = await SymptomAnalyzer.analyze(request.symptoms)
         return analysis
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/chat/completions", response_model=ChatResponse)
+async def chat_completions(request: ChatRequest):
+    try:
+        response = await ChatService.get_response(
+            request.user_prompt, 
+            request.health_context, 
+            request.history
+        )
+        return ChatResponse(response=response)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
