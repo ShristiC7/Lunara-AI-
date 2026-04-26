@@ -7,9 +7,15 @@ export default function Dashboard() {
   const [stats, setStats] = useState<any>({});
 
   useEffect(() => {
-    api.get("/stats")
-      .then((res) => setStats(res.data))
-      .catch(() => console.log("error"));
+    // Fetch stats
+    api.get("/cycles/stats")
+      .then((res) => setStats(prev => ({ ...prev, ...res.data.data })))
+      .catch(() => console.log("error fetching stats"));
+
+    // Fetch predictions
+    api.get("/cycles/prediction")
+      .then((res) => setStats(prev => ({ ...prev, prediction: res.data.data })))
+      .catch(() => console.log("error fetching prediction"));
   }, []);
 
   return (
