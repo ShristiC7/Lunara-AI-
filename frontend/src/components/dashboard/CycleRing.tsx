@@ -15,7 +15,7 @@ export const CycleRing: React.FC<CycleRingProps> = ({ data, isLoading }) => {
   // Logic for progress percentage
   // If follicular: day/total follicular length...
   // For simplicity: cycleDay / averageCycleLength (default 28)
-  const progress = data ? (data.cycleDay / 28) * 100 : 0;
+  const progress = data?.cycleDay ? (data.cycleDay / 28) * 100 : 0;
   const offset = circumference - (progress / 100) * circumference;
 
   const phaseLabels = {

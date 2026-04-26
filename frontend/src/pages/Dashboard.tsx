@@ -98,7 +98,10 @@ export default function Dashboard() {
             {prediction ? (
               <div className="space-y-1">
                 <p className="text-3xl font-black text-text-primary tracking-tight">
-                  {new Date(prediction.predictedStartDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  {prediction.predictedStartDate 
+                    ? new Date(prediction.predictedStartDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    : 'TBD'
+                  }
                 </p>
                 <p className="text-sm font-medium text-text-secondary">
                   {prediction.daysUntil} days remaining

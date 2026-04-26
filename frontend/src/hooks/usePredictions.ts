@@ -16,7 +16,16 @@ export const usePredictions = () => {
     queryKey: ['predictions', 'current'],
     queryFn: async () => {
       const res = await api.get('/predictions/current');
-      return res.data.data;
+      const data = res.data.data;
+      
+      if (!data) return null;
+
+      // Map AI fields to frontend interface
+      return {
+        ...data,
+        predictedStartDate: data.predictedDate,
+        confidence: data.confidence === 'HIGH' ? 95 : data.confidence === 'MEDIUM' ? 70 : 40,
+      };
     },
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
