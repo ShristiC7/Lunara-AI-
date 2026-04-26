@@ -1,5 +1,9 @@
 import json
+<<<<<<< HEAD
 from datetime import datetime
+=======
+from datetime import datetime, timezone
+>>>>>>> frontend-riya
 from typing import List, Optional
 from ..schemas.symptom_schemas import SymptomEntry, SymptomAnalysisResponse
 from ..utils.openai_client import analyze_with_openai
@@ -52,5 +56,5 @@ class SymptomAnalyzer:
             pattern_summary=analysis_data.get("pattern_summary", ""),
             notable_symptoms=analysis_data.get("notable_symptoms", []),
             recommendation=analysis_data.get("recommendation", ""),
-            generated_at=datetime.now()
+            generated_at=datetime.now(timezone.utc)
         )

@@ -7,7 +7,7 @@ import { PHASE_CONFIG } from '../utils/phase.utils';
 const PHASE_TIPS: Record<string, string[]> = {
   MENSTRUAL: ['Rest is productive. Schedule lighter tasks.', 'Warm foods and gentle hydration.'],
   FOLLICULAR: ['Start new projects — your brain is primed for it.', 'Experiment with workouts: try something new.'],
-  OVULATION: ['Your communication peaks now — ideal for interviews or meetings.', 'High-intensity exercise yields best results.'],
+  OVULATORY: ['Your communication peaks now — ideal for interviews or meetings.', 'High-intensity exercise yields best results.'],
   LUTEAL: ['Avoid caffeine in the second half of luteal.', 'Journaling helps process pre-menstrual emotions.'],
 };
 
@@ -45,7 +45,9 @@ export default function Insights() {
                 <div className="pl-4 space-y-3">
                   <div className="flex items-start gap-2">
                     <div className="mt-0.5 w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: 'var(--phase-color)' }} />
-                    <p className="text-sm text-slate-700 leading-relaxed max-w-[60ch]">{insight.content}</p>
+                    <p className="text-sm text-slate-700 leading-relaxed max-w-[60ch]">
+                      {typeof insight.content === 'string' ? insight.content : insight.content?.summary}
+                    </p>
                   </div>
                   {/* Evidence bar */}
                   <div className="space-y-1.5">

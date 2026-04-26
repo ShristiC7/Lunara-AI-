@@ -1,5 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
 from .schemas.cycle_schemas import CyclePredictionRequest, CyclePredictionResponse
 from .schemas.symptom_schemas import SymptomAnalysisRequest, SymptomAnalysisResponse
 from .services.cycle_predictor import CyclePredictor
@@ -22,7 +29,8 @@ app.add_middleware(
 async def health():
     return {"status": "ok", "version": "1.0.0"}
 
-@app.post("/predict/cycle", response_model=CyclePredictionResponse)
+from typing import Optional
+@app.post("/predict/cycle", response_model=Optional[CyclePredictionResponse])
 async def predict_cycle(request: CyclePredictionRequest):
     try:
         prediction = CyclePredictor.predict(request.cycles, request.symptoms)

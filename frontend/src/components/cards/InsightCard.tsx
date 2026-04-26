@@ -16,7 +16,14 @@ export const InsightCard: React.FC<InsightCardProps> = ({ insight, isLoading }) 
     return <div className="h-20 rounded-premium-xl bg-lunara-mist animate-pulse" />;
   }
 
+<<<<<<< HEAD
   const content = insight?.content || "Log your symptoms today to receive a personalized health insight from Lunara AI.";
+=======
+  const rawContent = insight?.content;
+  const content = typeof rawContent === 'string' 
+    ? rawContent 
+    : (rawContent as any)?.summary || "Log your symptoms today to receive a personalized health insight from Lunara AI.";
+>>>>>>> frontend-riya
 
   return (
     <Card 
