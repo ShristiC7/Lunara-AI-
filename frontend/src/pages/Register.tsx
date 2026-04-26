@@ -2,114 +2,92 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuthStore } from '../store/authStore';
+import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
+import { Card } from '../components/ui/Card';
+import { ShieldCheck } from 'lucide-react';
 
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
     try {
       const res = await api.post('/auth/register', { email, password });
       const { user, accessToken } = res.data.data;
       setAuth(user, accessToken);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Registration failed');
+      setError(err.response?.data?.error?.message || 'Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Create Account</h2>
-        {error && <p style={styles.error}>{error}</p>}
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.inputGroup}>
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={styles.input}
-            />
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <Card className="w-full max-w-md p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-text-primary mb-2">Create Account</h1>
+          <p className="text-text-secondary">Start your personalized health journey today.</p>
+        </div>
+
+        {error && (
+          <div className="bg-peach/30 border border-peach text-accent-pink px-4 py-3 rounded-premium mb-6 text-sm font-medium">
+            {error}
           </div>
-          <div style={styles.inputGroup}>
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={styles.input}
-            />
-          </div>
-          <button type="submit" style={styles.button}>Register</button>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <Input
+            label="Email Address"
+            type="email"
+            placeholder="name@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          
+          <Input
+            label="Create Password"
+            type="password"
+            placeholder="Min. 8 characters"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={8}
+          />
+
+          <p className="text-xs text-text-secondary px-1">
+            By signing up, you agree to our <span className="text-accent-pink cursor-pointer">Terms</span> and <span className="text-accent-pink cursor-pointer">Privacy Policy</span>.
+          </p>
+
+          <Button type="submit" className="w-full mt-2" isLoading={isLoading}>
+            Get Started
+          </Button>
         </form>
-        <p style={styles.footer}>
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
-      </div>
+
+        <div className="mt-8 pt-6 border-t border-border-premium text-center">
+          <p className="text-sm text-text-secondary">
+            Already have an account?{' '}
+            <Link to="/login" className="font-semibold text-accent-pink hover:underline">
+              Sign In
+            </Link>
+          </p>
+        </div>
+
+        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-text-secondary/70">
+          <ShieldCheck size={14} />
+          <span>Your data is encrypted and private</span>
+        </div>
+      </Card>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '80vh',
-  },
-  card: {
-    width: '400px',
-    padding: '40px',
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-    backgroundColor: 'white',
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: '24px',
-    color: '#4f46e5',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-  },
-  inputGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  },
-  input: {
-    padding: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ddd',
-  },
-  button: {
-    padding: '12px',
-    borderRadius: '4px',
-    border: 'none',
-    backgroundColor: '#4f46e5',
-    color: 'white',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    marginTop: '10px',
-  },
-  error: {
-    color: 'red',
-    textAlign: 'center',
-    marginBottom: '16px',
-  },
-  footer: {
-    textAlign: 'center',
-    marginTop: '20px',
-  },
-};

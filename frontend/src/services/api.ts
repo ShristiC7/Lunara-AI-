@@ -1,31 +1,36 @@
-// src/services/api.ts
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 
+// Base URL includes versioning as per spec
 export const api = axios.create({
-  baseURL: "/api",
+  baseURL: "/api/v1",
   withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Request interceptor to add Bearer token
+// Request interceptor to add Bearer token from Zustand store
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
-  if (token) {
+  if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// Response interceptor to handle token refresh
+// Response interceptor to handle token refresh automatically
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If 401 and not already retrying
+    // Handle 401 Unauthorized errors
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // Avoid infinite loop if refresh itself fails
-      if (originalRequest.url === "/auth/refresh" || originalRequest.url === "/auth/login") {
+      
+      // If we are already on auth routes, don't retry to avoid loops
+      const authRoutes = ["/auth/login", "/auth/register", "/auth/refresh"];
+      if (authRoutes.some(route => originalRequest.url?.includes(route))) {
         useAuthStore.getState().clearAuth();
         return Promise.reject(error);
       }
@@ -33,15 +38,22 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const res = await axios.post("/api/auth/refresh", {}, { withCredentials: true });
-        const { accessToken } = res.data.data;
+        // Attempt to rotate tokens via refresh endpoint
+        const res = await axios.post("/api/v1/auth/refresh", {}, { withCredentials: true });
+        const { accessToken, user } = res.data.data;
         
-        useAuthStore.getState().setAuth(res.data.data.user, accessToken);
+        // Update local store
+        useAuthStore.getState().setAuth(user, accessToken);
         
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        // Retry original request with new token
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        }
         return api(originalRequest);
       } catch (refreshError) {
+        // Refresh failed (likely expired refresh token) -> force logout
         useAuthStore.getState().clearAuth();
+        window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }
