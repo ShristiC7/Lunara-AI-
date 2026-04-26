@@ -112,7 +112,7 @@ class CyclePredictor:
             "phase": phase,
             "cycleDay": cycle_day,
             "daysUntil": max(0, days_until),
-            "predictedLength": predicted_length,
-            "finalPredictedLength": final_predicted_length,
-            "symptomAdjustment": min(4.0, symptom_adjustment)
+            "predictedLength": float(predicted_length),
+            "finalPredictedLength": float(final_predicted_length),
+            "symptomAdjustment": float(min(4.0, symptom_adjustment))
         }
