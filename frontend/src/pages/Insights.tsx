@@ -7,7 +7,7 @@ import { PHASE_CONFIG } from '../utils/phase.utils';
 const PHASE_TIPS: Record<string, string[]> = {
   MENSTRUAL: ['Rest is productive. Schedule lighter tasks.', 'Warm foods and gentle hydration.'],
   FOLLICULAR: ['Start new projects — your brain is primed for it.', 'Experiment with workouts: try something new.'],
-  OVULATION: ['Your communication peaks now — ideal for interviews or meetings.', 'High-intensity exercise yields best results.'],
+  OVULATORY: ['Your communication peaks now — ideal for interviews or meetings.', 'High-intensity exercise yields best results.'],
   LUTEAL: ['Avoid caffeine in the second half of luteal.', 'Journaling helps process pre-menstrual emotions.'],
 };
 
