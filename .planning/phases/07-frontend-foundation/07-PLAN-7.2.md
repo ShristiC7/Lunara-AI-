@@ -1,72 +1,63 @@
 ---
 wave: 2
-depends_on: ["07-PLAN-7.1.md"]
+depends_on: ["7.1"]
 files_modified: [
-  "frontend/src/pages/Dashboard.tsx",
-  "frontend/src/pages/Chat.tsx",
-  "frontend/src/pages/Reports.tsx",
-  "frontend/src/pages/LogSymptoms.tsx"
+  "frontend/src/components/layout/Sidebar.tsx",
+  "frontend/src/components/layout/AppShell.tsx",
+  "frontend/src/pages/Dashboard.tsx"
 ]
-requirements: ["UI-BASE-05", "UI-BASE-06"]
+requirements: ["UI-DASH-01", "UI-NAV-01"]
 autonomous: true
 ---
 
-# Plan 7.2: Feature Integration
+# Plan 7.2: Responsive Sidebar & Dashboard Shell
 
-Connect the existing dashboard, chat, and reports pages to their respective backend endpoints.
+Implement the persistent navigation structure and the core dashboard layout.
 
 ## Tasks
 
 <task>
-<read_first>
-- frontend/src/pages/Dashboard.tsx
-- api/src/routes/cycle.routes.ts
-</read_first>
 <action>
-Fix Dashboard data fetching.
-1. Update `Dashboard.tsx` to call `/cycles/stats` instead of `/stats`.
-2. Map the response data to the existing cards.
-3. Add a "Log Symptom" trigger (if applicable to existing UI).
+Create Persistent Sidebar Component.
+1. Implement `frontend/src/components/layout/Sidebar.tsx`:
+   - Desktop: Fixed sidebar on the left.
+   - Mobile: Transitions to a sleek bottom navigation bar.
+   - Use Lucide React icons (Dashboard, Logger, Insights, Analytics, Settings).
+   - Premium feel: Clean lines, #E9D5FF borders.
 </action>
 <acceptance_criteria>
-- Dashboard displays live data from the backend `/cycles/stats`.
+- Sidebar is persistent and responsive.
+- Bottom nav appears on mobile viewports.
 </acceptance_criteria>
 </task>
 
 <task>
-<read_first>
-- frontend/src/pages/Chat.tsx
-- api/src/routes/ai.routes.ts
-</read_first>
 <action>
-Integrate AI Insights/Chat.
-1. Connect `Chat.tsx` to the AI insights endpoints.
-2. Ensure messages are sent to the backend for analysis (if the chat feature is implemented as such).
-3. If the chat is a mock, update it to use real data from `/api/insights`.
+Create AppShell Layout.
+1. Implement `frontend/src/components/layout/AppShell.tsx`:
+   - Wraps all protected routes.
+   - Provides consistent background (#FAF7FF) and padding.
 </action>
 <acceptance_criteria>
-- Chat interface interacts with the AI service via the backend.
+- Layout is consistent across all pages.
 </acceptance_criteria>
 </task>
 
 <task>
-<read_first>
-- frontend/src/pages/LogSymptoms.tsx
-- api/src/routes/symptom.routes.ts
-</read_first>
 <action>
-Implement Symptom Logging.
-1. Create `LogSymptoms.tsx` with a form for logging symptoms (pain, energy, flow, mood).
-2. Connect to `POST /api/symptoms`.
-3. Use simple, fast UI (pill buttons/sliders) to meet the < 20s goal.
+Build Dashboard Skeleton.
+1. Implement `frontend/src/pages/Dashboard.tsx`:
+   - Grid layout for components.
+   - Top section: Cycle Ring placeholder.
+   - Right/Bottom: Next Period Card and Primary Insight Card.
 </action>
 <acceptance_criteria>
-- Users can log symptoms and see them reflected in the system.
+- Dashboard layout matches the spec.
 </acceptance_criteria>
 </task>
 
 ## Verification
 
 ### Manual Verification
-- Verify Dashboard stats update after logging a cycle in the backend.
-- Verify a report can be triggered and downloaded.
+- Resize browser to test sidebar-to-bottom-nav transition.
+- Click through nav items to verify routing.

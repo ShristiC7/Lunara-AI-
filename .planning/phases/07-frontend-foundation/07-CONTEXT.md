@@ -1,54 +1,46 @@
-# Phase 7 Context: Frontend Foundation
+# Phase 7 Context: Premium Frontend UI/UX
 
-## Decisions
+## Core Decisions
 
-### 1. Directory Structure
-- **Root Directory**: `frontend/` (existing scaffold).
-- **Architecture**: Refactoring existing components into modular React components, hooks-based logic, and service-layer for API calls.
+### 1. Design Aesthetic: "Calm Intelligence"
+- **Style**: Minimalist, clean, structured. Strictly avoiding glassmorphism, neon gradients, or dashboard clutter.
+- **Color Palette (Strict)**:
+  - Lavender (Base): `#F3E8FF`
+  - Soft Pink (Interaction): `#FCE7F3`
+  - Accent Pink (CTA): `#EC4899`
+  - Peach (Alerts/Highlights): `#FFE4D6`
+  - Background: `#FAF7FF` | Surface: `#FFFFFF`
+- **Typography**: Inter (Primary). h1: 26-28px, h2: 20-22px, body: 14-15px.
+- **UI Style**: 14-16px border radius, subtle shadows, generous spacing.
+- **Icons**: Lucide React (outline-based).
 
-### 2. Tech Stack
-- **Framework**: React (Vite) + TypeScript.
-- **Styling**: Tailwind CSS + Vanilla CSS for custom Calm Intelligence tokens.
-- **State Management**: 
-    - **Server State**: React Query (TanStack Query) for data fetching, caching, and synchronization.
-    - **Client State**: Zustand for lightweight global state (auth, user profile).
-- **Navigation**: React Router v6.
-- **API Client**: Axios with interceptors for JWT access/refresh token rotation.
+### 2. Navigation & Structure
+- **Persistent Sidebar**: Desktop-first sidebar for stability, likely collapsing to a bottom bar for mobile.
+- **Core Pages**: Dashboard, Symptom Logger, Insights, Analytics, Settings, Auth (Login/Register).
 
-### 3. Integration Philosophy
-- **Focus**: Connectivity and Feature Parity.
-- **Visuals**: Maintain existing scaffold design (Bootstrap/Inline styles) as per user request.
-- **Goal**: Ensure all backend features (Auth, Cycles, Symptoms, AI) are fully functional in the frontend.
+### 3. Dashboard Logic
+- **Authority**: The frontend **must** rely on the `/predictions/current` API response for the current phase (Follicular, Luteal, etc.) to ensure sync with AI models.
+- **Cycle Ring**: Main visual focus showing current cycle day and phase.
+- **Insight Card**: Show ONLY ONE primary insight at a time for clarity.
 
-### 4. Auth Implementation
-- **Login/Register**: Add missing pages and integrate with `/api/auth`.
-- **Token Management**: Axios interceptor monitors 401 errors → triggers `/api/v1/auth/refresh` → retries original request.
-- **Storage**: Access token in Zustand; Refresh token in HttpOnly cookie.
+### 4. Technical Architecture
+- **Tech Stack**: React (Vite), Tailwind CSS, React Query, Axios, React Router, Recharts.
+- **Authentication**: 
+  - Access Token: In-memory (Zustand).
+  - Refresh Token: HttpOnly Cookie flow.
+  - Interceptors: Automated 401 handling with `/api/v1/auth/refresh`.
+- **Data Fetching**: Hooks (`usePredictions`, `useInsights`, etc.) with Skeleton Loaders. No spinners.
 
-## Specifics
+### 5. Interaction & Performance
+- **Logging Speed**: Target < 20 seconds for full symptom log. No typing required for core inputs (buttons/sliders only).
+- **Perception**: < 300ms perceived delay. Optimistic updates for logging.
+- **Heatmaps**: Analytics must show both **Severity** and **Frequency** of symptoms.
 
-### Key UI Requirements
-- **Dashboard**: Cycle Ring, Next Period Card (Peach tint if near), single primary Insight Card.
-- **Symptom Logger**: Pill-style buttons, slider for pain, tap for energy. Goal: < 20 seconds to complete.
-- **Analytics**: Recharts for cycle history and symptom trends.
-- **UX Optimization**:
-  - **Optimistic Updates**: Immediate feedback for symptom logging before API confirmation.
-  - **Loading States**: Use **Skeleton Loaders** instead of spinners for perceived speed.
-  - **Interaction**: Target < 200ms perceived delay for all interactions.
-
-### Backend Integration
+## Integration Details
 - **Base URL**: `/api/v1/`
-- **REST Structure**:
-  - `auth`: `/api/v1/auth` (login, register, refresh, logout)
-  - `cycles`: `/api/v1/cycles`
-  - `symptoms`: `/api/v1/symptoms`
-  - `predictions`: `/api/v1/predictions/current`
-  - `insights`: `/api/v1/insights/today`
-  - `alerts`: `/api/v1/alerts/active`
-  - `recommendations`: `/api/v1/recommendations`
-  - `reports`: `/api/v1/reports/generate` (trigger), `/api/v1/reports` (list)
+- **Encryption**: Include small "Your data is encrypted and private" trust hints throughout the UX.
 
-## Deferred Ideas
-- Mobile App (Web-first approach).
-- Social features.
-- Payment gateways.
+## Out of Scope (Deferred)
+- Generic AI UI templates.
+- Heavy animations or non-functional transitions.
+- Social features or external integrations.

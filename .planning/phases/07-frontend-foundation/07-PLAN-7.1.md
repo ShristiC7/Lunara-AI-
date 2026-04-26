@@ -2,80 +2,87 @@
 wave: 1
 depends_on: []
 files_modified: [
+  "frontend/tailwind.config.js",
+  "frontend/src/index.css",
   "frontend/src/services/api.ts",
   "frontend/src/pages/Login.tsx",
   "frontend/src/pages/Register.tsx",
-  "frontend/src/App.tsx",
-  "frontend/vite.config.ts"
+  "frontend/src/components/ui/Button.tsx",
+  "frontend/src/components/ui/Input.tsx"
 ]
-requirements: ["UI-BASE-01", "UI-BASE-04"]
+requirements: ["UI-BASE-01", "UI-BASE-02", "UI-AUTH-01"]
 autonomous: true
 ---
 
-# Plan 7.1: API Integration + Auth UI
+# Plan 7.1: Premium Design System & Auth Refactor
 
-Connect the existing frontend to the backend API and implement the missing authentication screens.
+Initialize the "Calm Intelligence" design system and implement a production-grade authentication flow.
 
 ## Tasks
 
 <task>
-<read_first>
-- frontend/src/services/api.ts
-- frontend/vite.config.ts
-</read_first>
 <action>
-Configure API client and Vite proxy.
-1. Update `frontend/vite.config.ts` to proxy `/api` to `http://localhost:4000`.
-2. Update `frontend/src/services/api.ts`:
-   - Set `baseURL` to `/api`.
-   - Set `withCredentials: true`.
-   - Add interceptors for JWT rotation (monitoring 401s).
+Configure Tailwind with the "Calm Intelligence" palette.
+1. Update `frontend/tailwind.config.js` with the specified colors:
+   - `lavender`: #F3E8FF
+   - `soft-pink`: #FCE7F3
+   - `accent-pink`: #EC4899
+   - `peach`: #FFE4D6
+   - `background`: #FAF7FF
+   - `surface`: #FFFFFF
+2. Add border-radius tokens (14-16px).
+3. Set Inter as the primary font in `index.css`.
 </action>
 <acceptance_criteria>
-- `frontend/vite.config.ts` has proxy configured.
-- `frontend/src/services/api.ts` has `withCredentials: true` and 401 interceptor.
+- Tailwind config contains all specified colors.
+- `index.css` imports Inter and sets it as default.
 </acceptance_criteria>
 </task>
 
 <task>
-<read_first>
-- frontend/src/pages/Login.tsx
-- frontend/src/pages/Register.tsx
-</read_first>
 <action>
-Create Login and Register pages.
-1. Implement `Login.tsx` with email/password form calling `POST /auth/login`.
-2. Implement `Register.tsx` with email/password form calling `POST /auth/register`.
-3. Ensure they update the `authStore` on success.
-4. Use existing styling patterns (Bootstrap/Inline) to match the current scaffold.
+Create Reusable UI Components.
+1. Create `frontend/src/components/ui/Button.tsx` (Pill-shaped, soft-pink/accent-pink variants).
+2. Create `frontend/src/components/ui/Card.tsx` (Surface color, 16px radius, subtle shadow).
+3. Create `frontend/src/components/ui/Input.tsx` (Minimal, soft border).
 </action>
 <acceptance_criteria>
-- `frontend/src/pages/Login.tsx` and `frontend/src/pages/Register.tsx` exist.
-- Form submission calls the correct backend endpoints.
+- Components follow the design system strictly.
 </acceptance_criteria>
 </task>
 
 <task>
-<read_first>
-- frontend/src/App.tsx
-</read_first>
 <action>
-Update Routing for Auth.
-1. Add `/login` and `/register` routes.
-2. Implement a simple `ProtectedRoute` component.
-3. Wrap `/dashboard`, `/chat`, and `/reports` in `ProtectedRoute`.
+Implement Secure API Client.
+1. Update `frontend/src/services/api.ts`:
+   - Axios instance with `baseURL: "/api/v1"`.
+   - Interceptor to inject Bearer token from Zustand store.
+   - Interceptor to handle 401: call `/auth/refresh` -> retry original request.
 </action>
 <acceptance_criteria>
-- Unauthenticated users are redirected to `/login`.
-- Authenticated users can access the dashboard.
+- API calls automatically handle token injection and rotation.
+</acceptance_criteria>
+</task>
+
+<task>
+<action>
+Build Premium Auth Pages.
+1. Refactor `Login.tsx` and `Register.tsx` to use the new design system.
+2. Ensure high-quality layout (centered, clean, "Calm Intelligence" feel).
+3. Add "Your data is encrypted and private" trust hint.
+</action>
+<acceptance_criteria>
+- Login/Register pages match the new palette and typography.
+- Integration with backend auth endpoints works.
 </acceptance_criteria>
 </task>
 
 ## Verification
 
 ### Automated Tests
-- Mock a 401 response and verify the interceptor attempts a refresh.
+- `npm run test` (if exists) should pass.
+- Mock 401 response and verify interceptor logic.
 
 ### Manual Verification
-- Register a new user and login.
-- Verify the access token is stored and sent in headers.
+- Verify colors and fonts against the design spec.
+- Verify successful login redirects to dashboard.
