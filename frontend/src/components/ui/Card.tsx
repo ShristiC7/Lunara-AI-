@@ -23,6 +23,7 @@ export const Card: React.FC<CardProps> = ({
     sunken: 'bg-surface-sunken border border-transparent shadow-none',
     elevated: 'bg-white border border-border-default shadow-md',
     tinted: 'bg-phase-muted border border-phase-color/10 shadow-none',
+    premium: 'premium-card soft-glow',
   };
 
   return (
