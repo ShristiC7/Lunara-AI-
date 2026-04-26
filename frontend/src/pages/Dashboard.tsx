@@ -19,18 +19,50 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div style={{ display: "flex", gap: "20px" }}>
-      <Card title="Predictions">
-        <p>{stats.predictions || 0}</p>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+      <Card title="Avg Cycle Length">
+        <p style={styles.stat}>{stats.averageCycleLength || 0} Days</p>
       </Card>
 
-      <Card title="Anomalies">
-        <p>{stats.anomalies || 0}</p>
+      <Card title="Regularity Score">
+        <p style={styles.stat}>{stats.regularityScore || 0}%</p>
       </Card>
 
-      <Card title="Alerts">
-        <p>{stats.alerts || 0}</p>
+      <Card title="Avg Period Length">
+        <p style={styles.stat}>{stats.averagePeriodLength || 0} Days</p>
       </Card>
+
+      <Card title="Most Common Symptoms">
+        <ul style={styles.list}>
+          {stats.mostCommonSymptoms?.map((s: string) => (
+            <li key={s}>{s}</li>
+          )) || <li>No data yet</li>}
+        </ul>
+      </Card>
+
+      {stats.prediction && (
+        <Card title="Next Cycle Prediction">
+          <p style={styles.prediction}>
+            Expected Start: {new Date(stats.prediction.predictedStartDate).toLocaleDateString()}
+          </p>
+        </Card>
+      )}
     </div>
   );
 }
+
+const styles = {
+  stat: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: '#4f46e5',
+  },
+  list: {
+    paddingLeft: '20px',
+    textAlign: 'left' as const,
+  },
+  prediction: {
+    color: '#10b981',
+    fontWeight: 'bold',
+  }
+};

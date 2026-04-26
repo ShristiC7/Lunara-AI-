@@ -4,7 +4,8 @@ depends_on: ["07-PLAN-7.1.md"]
 files_modified: [
   "frontend/src/pages/Dashboard.tsx",
   "frontend/src/pages/Chat.tsx",
-  "frontend/src/pages/Reports.tsx"
+  "frontend/src/pages/Reports.tsx",
+  "frontend/src/pages/LogSymptoms.tsx"
 ]
 requirements: ["UI-BASE-05", "UI-BASE-06"]
 autonomous: true
@@ -50,16 +51,17 @@ Integrate AI Insights/Chat.
 
 <task>
 <read_first>
-- frontend/src/pages/Reports.tsx
-- api/src/routes/report.routes.ts
+- frontend/src/pages/LogSymptoms.tsx
+- api/src/routes/symptom.routes.ts
 </read_first>
 <action>
-Integrate PDF Reports.
-1. Connect `Reports.tsx` to `/api/reports` for listing and `/api/reports/trigger` for generation.
-2. Implement download link for generated reports.
+Implement Symptom Logging.
+1. Create `LogSymptoms.tsx` with a form for logging symptoms (pain, energy, flow, mood).
+2. Connect to `POST /api/symptoms`.
+3. Use simple, fast UI (pill buttons/sliders) to meet the < 20s goal.
 </action>
 <acceptance_criteria>
-- Reports page lists generated PDFs and allows triggering a new report.
+- Users can log symptoms and see them reflected in the system.
 </acceptance_criteria>
 </task>
 

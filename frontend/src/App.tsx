@@ -6,6 +6,7 @@ import Chat from "./pages/Chat";
 import Reports from "./pages/Reports";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import LogSymptoms from "./pages/LogSymptoms";
 import { useAuthStore } from "./store/authStore";
 
 // Protected Route Component
@@ -26,6 +27,7 @@ function Navbar() {
         {isAuthenticated ? (
           <>
             <Link style={styles.link} to="/">Dashboard</Link>
+            <Link style={styles.link} to="/log">Log Symptoms</Link>
             <Link style={styles.link} to="/chat">Chat</Link>
             <Link style={styles.link} to="/reports">Reports</Link>
             <button 
@@ -59,6 +61,11 @@ function App() {
           <Route path="/" element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/log" element={
+            <ProtectedRoute>
+              <LogSymptoms />
             </ProtectedRoute>
           } />
           <Route path="/chat" element={
