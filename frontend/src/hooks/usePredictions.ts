@@ -3,30 +3,38 @@ import { api } from '../services/api';
 
 export interface PredictionData {
   predictedStartDate: string;
-  predictedLength: number;
+  predictedDate?: string;
+  predictedLength?: number;
+  finalPredictedLength?: number;
   daysUntil: number;
   confidence: number;
   phase: 'MENSTRUAL' | 'FOLLICULAR' | 'OVULATORY' | 'LUTEAL';
   cycleDay: number;
-  symptomAdjustment: number;
+  symptomAdjustment?: number;
+  ovulationStart?: string;
+  ovulationEnd?: string;
 }
 
 export const usePredictions = () => {
-  return useQuery<PredictionData>({
+  return useQuery<PredictionData | null>({
     queryKey: ['predictions', 'current'],
     queryFn: async () => {
-      const res = await api.get('/predictions/current');
-      const data = res.data.data;
-      
-      if (!data) return null;
-
-      // Map AI fields to frontend interface
-      return {
-        ...data,
-        predictedStartDate: data.predictedDate,
-        confidence: data.confidence === 'HIGH' ? 95 : data.confidence === 'MEDIUM' ? 70 : 40,
-      };
+      try {
+        const res = await api.get('/predictions/current');
+        const data = res.data.data;
+        if (!data) return null;
+        return {
+          ...data,
+          predictedStartDate: data.predictedDate || data.predictedStartDate,
+          confidence:
+            data.confidence === 'HIGH' ? 95 :
+            data.confidence === 'MEDIUM' ? 70 : 40,
+        };
+      } catch {
+        return null;
+      }
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 60 * 1000,
+    retry: 1,
   });
 };
