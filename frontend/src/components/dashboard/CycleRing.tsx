@@ -1,5 +1,5 @@
 import React from 'react';
-import { PredictionData } from '../../hooks/usePredictions';
+import type { PredictionData } from '../../hooks/usePredictions';
 
 interface CycleRingProps {
   data?: PredictionData;

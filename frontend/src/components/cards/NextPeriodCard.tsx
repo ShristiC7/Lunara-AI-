@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '../ui/Card';
 import { Calendar, Info } from 'lucide-react';
-import { PredictionData } from '../../hooks/usePredictions';
+import type { PredictionData } from '../../hooks/usePredictions';
 
 interface NextPeriodCardProps {
   data?: PredictionData | null;

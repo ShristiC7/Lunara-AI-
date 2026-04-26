@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PredictionData } from '../../hooks/usePredictions';
+import type { PredictionData } from '../../hooks/usePredictions';
 import { PHASE_CONFIG } from '../../utils/phase.utils';
 
 interface ProgressRingProps {
