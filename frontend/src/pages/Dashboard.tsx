@@ -23,7 +23,7 @@ const RECOMMENDATIONS: Record<string, Array<{ category: 'nutrition' | 'movement'
     { category: 'nutrition', text: 'Protein + leafy greens' },
     { category: 'wellness', text: 'Plan your week' },
   ],
-  OVULATORY: [
+  OVULATION: [
     { category: 'movement', text: 'High intensity workout' },
     { category: 'wellness', text: 'Social activities' },
     { category: 'nutrition', text: 'Hydrate well' },
@@ -88,7 +88,7 @@ export default function Dashboard() {
               </div>
               <div className="flex gap-1 h-2 rounded-full overflow-hidden bg-slate-100">
                 {Array.from({ length: 7 }).map((_, i) => {
-                  const day = (prediction?.currentDay || 1) + i;
+                  const day = (prediction?.cycleDay || 1) + i;
                   const dPhase = day <= 5 ? 'MENSTRUAL' : day <= 13 ? 'FOLLICULAR' : day <= 16 ? 'OVULATION' : 'LUTEAL';
                   const colors: any = { MENSTRUAL: '#f43f5e', FOLLICULAR: '#10b981', OVULATION: '#f59e0b', LUTEAL: '#7c3aed' };
                   return (

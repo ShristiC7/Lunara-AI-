@@ -1,4 +1,3 @@
-import React from 'react';
 import type { PredictionData } from '../../hooks/usePredictions';
 
 interface CycleRingProps {
@@ -6,7 +5,7 @@ interface CycleRingProps {
   isLoading?: boolean;
 }
 
-export const CycleRing: React.FC<CycleRingProps> = ({ data, isLoading }) => {
+export const CycleRing = ({ data, isLoading }: CycleRingProps) => {
   const size = 200;
   const strokeWidth = 12;
   const radius = (size - strokeWidth) / 2;
@@ -21,14 +20,14 @@ export const CycleRing: React.FC<CycleRingProps> = ({ data, isLoading }) => {
   const phaseLabels = {
     MENSTRUAL: 'Menstrual Phase',
     FOLLICULAR: 'Follicular Phase',
-    OVULATORY: 'Ovulatory Phase',
+    OVULATION: 'Ovulatory Phase',
     LUTEAL: 'Luteal Phase',
   };
 
   const phaseDescriptions = {
     MENSTRUAL: 'Time for rest and reflection.',
     FOLLICULAR: 'Energy levels are rising.',
-    OVULATORY: 'Peak energy and confidence.',
+    OVULATION: 'Peak energy and confidence.',
     LUTEAL: 'PMS symptoms may occur.',
   };
 

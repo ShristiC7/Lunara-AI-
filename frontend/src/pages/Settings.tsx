@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
 import { useAuthStore } from '../store/authStore';
 import { Shield, LogOut, Download, Trash2, ChevronRight, Moon } from 'lucide-react';
 
-const Toggle: React.FC<{ checked: boolean; onChange: () => void; id: string }> = ({ checked, onChange, id }) => (
+const Toggle = ({ checked, onChange, id }: { checked: boolean; onChange: () => void; id: string }) => (
   <button
     id={id}
     role="switch"
