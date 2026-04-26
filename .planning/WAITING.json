@@ -1,0 +1,13 @@
+{
+  "status": "waiting",
+  "type": "multiSelect",
+  "question": "Which areas do you want to discuss for the Frontend foundation?",
+  "options": [
+    "Directory Structure",
+    "Auth Implementation",
+    "Design System Tokens",
+    "Scaffolding Choices"
+  ],
+  "since": "2026-04-26T07:16:52.507Z",
+  "phase": "7"
+}
