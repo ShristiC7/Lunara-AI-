@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PHASE_CONFIG } from '../utils/phase.utils';
 
-type Phase = 'MENSTRUAL' | 'FOLLICULAR' | 'OVULATORY' | 'LUTEAL';
+type Phase = 'MENSTRUAL' | 'FOLLICULAR' | 'OVULATION' | 'LUTEAL';
 
 interface ThemeContextType {
   currentPhase: Phase;
@@ -14,7 +14,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [currentPhase, setPhase] = useState<Phase>('FOLLICULAR');
 
   useEffect(() => {
-    const config = PHASE_CONFIG[currentPhase];
+    const config = PHASE_CONFIG[currentPhase as keyof typeof PHASE_CONFIG];
     if (config) {
       document.documentElement.style.setProperty('--phase-color', config.color);
       document.documentElement.style.setProperty('--phase-light', config.colorLight);

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { ProgressRing } from '../components/dashboard/ProgressRing';
 import { NextPeriodCard } from '../components/cards/NextPeriodCard';
 import { InsightCard } from '../components/cards/InsightCard';
@@ -74,8 +74,38 @@ export default function Dashboard() {
 
         {/* Left — Cycle Ring + Stats */}
         <div className="lg:col-span-3 space-y-6">
-          <Card className="flex items-center justify-center py-12 bg-gradient-to-b from-white to-lunara-whisper">
+          <Card className="relative flex flex-col items-center justify-center py-10 bg-gradient-to-b from-white to-lunara-whisper overflow-hidden">
+            {/* Subtle background glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--phase-color)]/5 blur-[80px] pointer-events-none" />
+            
             <ProgressRing data={prediction} isLoading={predictionLoading} />
+            
+            {/* Cycle Forecast Bar */}
+            <div className="mt-8 w-full max-w-md px-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">7-Day Forecast</span>
+                <span className="text-[10px] font-medium text-slate-400">AI Predicted</span>
+              </div>
+              <div className="flex gap-1 h-2 rounded-full overflow-hidden bg-slate-100">
+                {Array.from({ length: 7 }).map((_, i) => {
+                  const day = (prediction?.currentDay || 1) + i;
+                  const dPhase = day <= 5 ? 'MENSTRUAL' : day <= 13 ? 'FOLLICULAR' : day <= 16 ? 'OVULATION' : 'LUTEAL';
+                  const colors: any = { MENSTRUAL: '#f43f5e', FOLLICULAR: '#10b981', OVULATION: '#f59e0b', LUTEAL: '#7c3aed' };
+                  return (
+                    <div 
+                      key={i} 
+                      className="flex-1 transition-all duration-500" 
+                      style={{ backgroundColor: colors[dPhase], opacity: 0.3 + (i * 0.1) }} 
+                      title={`Day ${day}: ${dPhase}`}
+                    />
+                  );
+                })}
+              </div>
+              <div className="flex justify-between mt-1 text-[9px] font-bold text-slate-400 uppercase">
+                <span>Today</span>
+                <span>Next Week</span>
+              </div>
+            </div>
           </Card>
 
           <div className="grid grid-cols-2 gap-4">

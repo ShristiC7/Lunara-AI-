@@ -8,7 +8,7 @@ export interface PredictionData {
   finalPredictedLength?: number;
   daysUntil: number;
   confidence: number;
-  phase: 'MENSTRUAL' | 'FOLLICULAR' | 'OVULATORY' | 'LUTEAL';
+  phase: 'MENSTRUAL' | 'FOLLICULAR' | 'OVULATION' | 'LUTEAL';
   cycleDay: number;
   symptomAdjustment?: number;
   ovulationStart?: string;
