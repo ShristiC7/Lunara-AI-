@@ -1,10 +1,12 @@
 import Bull from 'bull';
 import { logger } from '../utils/logger';
 
+import { getRedisConfig } from '../lib/redisConfig';
+
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
 const defaultOptions: Bull.QueueOptions = {
-  redis: REDIS_URL,
+  redis: getRedisConfig(REDIS_URL) as any,
   defaultJobOptions: {
     attempts: 5,
     backoff: {
@@ -16,7 +18,7 @@ const defaultOptions: Bull.QueueOptions = {
   },
 };
 
-export const aiQueue = new Bull('ai-inference', defaultOptions);
+export const aiQueue = new Bull('ai-inference', REDIS_URL, defaultOptions);
 
 aiQueue.on('error', (error) => {
   logger.error('AI Queue Error', { error: error.message });

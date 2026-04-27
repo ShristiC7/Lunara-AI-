@@ -1,10 +1,12 @@
 import Bull from 'bull';
 import { logger } from '../utils/logger';
 
+import { getRedisConfig } from '../lib/redisConfig';
+
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
-export const emailQueue = new Bull('email-delivery', {
-  redis: REDIS_URL,
+export const emailQueue = new Bull('email-delivery', REDIS_URL, {
+  redis: getRedisConfig(REDIS_URL),
   defaultJobOptions: {
     attempts: 3,
     backoff: {
