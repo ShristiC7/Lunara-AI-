@@ -33,6 +33,7 @@ const globalRateLimiter = rateLimit({
 export function createApp(): Application {
   const app = express();
 
+  app.set('trust proxy', 1);
   app.use(helmet());
 
   app.use(
